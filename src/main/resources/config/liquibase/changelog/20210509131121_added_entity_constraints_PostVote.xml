@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity PostVote.
+    -->
+    <changeSet author="jhipster" id="20210509131121-2">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+            baseTableName="post_vote"
+            constraintName="fk_post_vote__user_id"
+            referencedColumnNames="id"
+            referencedTableName="users"/>
+
+        <addForeignKeyConstraint baseColumnNames="post_id"
+            baseTableName="post_vote"
+            constraintName="fk_post_vote__post_id"
+            referencedColumnNames="id"
+            referencedTableName="post"/>
+    </changeSet>
+</databaseChangeLog>

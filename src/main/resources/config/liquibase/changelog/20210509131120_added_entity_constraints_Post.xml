@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Post.
+    -->
+    <changeSet author="jhipster" id="20210509131120-2">
+
+        <addForeignKeyConstraint baseColumnNames="moderator_id"
+            baseTableName="post"
+            constraintName="fk_post__moderator_id"
+            referencedColumnNames="id"
+            referencedTableName="users"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+            baseTableName="post"
+            constraintName="fk_post__user_id"
+            referencedColumnNames="id"
+            referencedTableName="users"/>
+
+        <addForeignKeyConstraint baseColumnNames="post_id"
+            baseTableName="tag2post"
+            constraintName="fk_tag2post__post_id"
+            referencedColumnNames="id"
+            referencedTableName="post"/>
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+            baseTableName="tag2post"
+            constraintName="fk_tag2post__tag_id"
+            referencedColumnNames="id"
+            referencedTableName="tag"/>
+    </changeSet>
+</databaseChangeLog>

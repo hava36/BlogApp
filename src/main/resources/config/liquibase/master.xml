@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <property dbms="h2" name="now" value="now()"/>
+    <property dbms="mysql, mariadb" name="now" value="now()"/>
+    <property dbms="postgresql, h2" name="floatType" value="float4"/>
+    <property dbms="mysql, oracle, mssql, mariadb" name="floatType" value="float"/>
+    <property dbms="h2" name="clobType" value="clob"/>
+    <property dbms="mysql, oracle, mssql, mariadb, postgresql" name="clobType" value="clob"/>
+    <property dbms="h2, mysql, mariadb" name="uuidType" value="varchar(36)"/>
+    <property dbms="mysql, mariadb" name="datetimeType" value="datetime(6)"/>
+    <property dbms="oracle, mssql, postgresql, h2" name="datetimeType" value="datetime"/>
+
+    <include file="config/liquibase/changelog/20210509131119_added_entity_User.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131120_added_entity_Post.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131121_added_entity_PostVote.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131122_added_entity_PostComment.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131123_added_entity_Tag.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131124_added_entity_CaptchaCode.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131125_added_entity_GlobalSetting.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131120_added_entity_constraints_Post.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131121_added_entity_constraints_PostVote.xml"
+        relativeToChangelogFile="false"/>
+    <include
+        file="config/liquibase/changelog/20210509131122_added_entity_constraints_PostComment.xml"
+        relativeToChangelogFile="false"/>
+
+</databaseChangeLog>
