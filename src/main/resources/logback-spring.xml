@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
+    <!--
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>90</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <charset>utf-8</charset>
+                <Pattern>%d %-5level [%thread] %logger{0}: %msg%n</Pattern>
+            </encoder>
+        </appender>
+
+        <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+            <queueSize>512</queueSize>
+            <appender-ref ref="FILE"/>
+        </appender>
+
+        <root level="${logging.level.root}">
+            <appender-ref ref="ASYNC"/>
+        </root>
+    -->
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger level="WARN" name="javax.activation"/>
+    <logger level="WARN" name="javax.mail"/>
+    <logger level="WARN" name="javax.management.remote"/>
+    <logger level="WARN" name="javax.xml.bind"/>
+    <logger level="WARN" name="ch.qos.logback"/>
+    <logger level="WARN" name="org.redisson"/>
+    <logger level="WARN" name="com.ryantenney"/>
+    <logger level="WARN" name="com.sun"/>
+    <logger level="WARN" name="com.zaxxer"/>
+    <logger level="WARN" name="io.netty"/>
+    <logger level="WARN" name="io.undertow"/>
+    <logger level="ERROR" name="io.undertow.websockets.jsr"/>
+    <logger level="WARN" name="org.apache"/>
+    <logger level="OFF" name="org.apache.catalina.startup.DigesterFactory"/>
+    <logger level="WARN" name="org.bson"/>
+    <logger level="WARN" name="org.hibernate.validator"/>
+    <logger level="WARN" name="org.hibernate"/>
+    <logger level="OFF" name="org.hibernate.ejb.HibernatePersistence"/>
+    <logger level="WARN" name="org.springframework"/>
+    <logger level="WARN" name="org.springframework.web"/>
+    <logger level="WARN" name="org.springframework.security"/>
+    <logger level="WARN" name="org.springframework.cache"/>
+    <logger level="WARN" name="org.thymeleaf"/>
+    <logger level="WARN" name="org.xnio"/>
+    <logger level="WARN" name="springfox"/>
+    <logger level="WARN" name="sun.rmi"/>
+    <logger level="WARN" name="liquibase"/>
+    <logger level="INFO" name="LiquibaseSchemaResolver"/>
+    <logger level="ERROR" name="springfox.documentation.schema.property"/>
+
+    <logger level="WARN" name="sun.rmi.transport"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+</configuration>
