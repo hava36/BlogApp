@@ -16,15 +16,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Tag.
  */
 @Entity
 @Table(name = "tag")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -41,7 +38,6 @@ public class Tag implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = {"moderator", "user", "tags"}, allowSetters = true)
     @ToString.Exclude
     private Set<Post> posts;

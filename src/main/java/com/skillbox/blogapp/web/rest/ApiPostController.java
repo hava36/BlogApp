@@ -1,8 +1,10 @@
 package com.skillbox.blogapp.web.rest;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/api/post/")
+@RestController
+@RequestMapping("/api/post")
 public class ApiPostController {
 
 }
