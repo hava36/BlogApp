@@ -7,7 +7,7 @@
 
     <groupId>com.skillbox.blogapp</groupId>
     <artifactId>blog-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Blog App</name>
 

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +62,8 @@ public class GlobalSettingServiceImpl implements GlobalSettingService {
     @Transactional(readOnly = true)
     public List<GlobalSettingDto> findAll() {
         log.debug("Request to get all GlobalSettings");
-        return globalSettingRepository.findAll().stream().map(globalSettingMapper::toDto)
+        return globalSettingRepository.findAll(Sort.by("code")).stream()
+            .map(globalSettingMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
