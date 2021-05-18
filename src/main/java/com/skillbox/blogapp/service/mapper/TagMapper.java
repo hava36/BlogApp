@@ -18,4 +18,15 @@ public interface TagMapper extends EntityMapper<TagDto, Tag> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     Set<TagDto> toDtoIdSet(Set<Tag> tag);
+
+    @Named("id")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    TagDto toDtoId(Tag tag);
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "weight", source = "weight")
+    TagDto toDto(Tag tag);
+
 }

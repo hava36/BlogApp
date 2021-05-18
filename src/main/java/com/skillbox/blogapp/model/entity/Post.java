@@ -25,7 +25,6 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * A Post.
@@ -79,7 +78,6 @@ public class Post implements Serializable {
     @NotNull
     @JoinTable(name = "tag2post", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @JsonIgnoreProperties(value = {"tags"}, allowSetters = true)
-    @ToString.Exclude
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")

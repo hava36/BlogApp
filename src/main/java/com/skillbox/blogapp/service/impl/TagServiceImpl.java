@@ -66,6 +66,13 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<TagDto> findAllWithWeight(String filterByName) {
+        return tagRepository.findAllWithWeight(filterByName).stream().map(tagMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<TagDto> findOne(Integer id) {
         log.debug("Request to get Tag : {}", id);
         return tagRepository.findById(id).map(tagMapper::toDto);
@@ -76,4 +83,5 @@ public class TagServiceImpl implements TagService {
         log.debug("Request to delete Tag : {}", id);
         tagRepository.deleteById(id);
     }
+
 }

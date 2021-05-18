@@ -18,4 +18,6 @@ public class TagDto implements Serializable {
     @NotNull
     private String name;
 
+    private Double weight;
+
 }

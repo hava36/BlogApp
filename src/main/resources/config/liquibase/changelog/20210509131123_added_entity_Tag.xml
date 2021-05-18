@@ -38,5 +38,14 @@
             <column name="name" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
+        <loadData
+          file="config/liquibase/fake-data/tag2post.csv"
+          separator=";"
+          tableName="tag2post">
+            <column name="id" type="numeric"/>
+            <column name="tag_id" type="numeric"/>
+            <column name="post_id" type="numeric"/>
+        </loadData>
     </changeSet>
+
 </databaseChangeLog>

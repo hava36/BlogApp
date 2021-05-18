@@ -33,6 +33,9 @@ public interface TagService {
      */
     List<TagDto> findAll();
 
+
+    List<TagDto> findAllWithWeight(String filterByName);
+
     /**
      * Get the "id" tag.
      *
@@ -47,4 +50,5 @@ public interface TagService {
      * @param id the id of the entity.
      */
     void delete(Integer id);
+
 }

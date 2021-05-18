@@ -1,1 +1,7 @@
 id;time;text;user_id;post_id
+1;2013-04-09T06:09:31;some text;1;1
+2;2014-04-09T06:09:31;some text;1;2
+3;2014-04-09T06:09:31;some text;1;2
+4;2014-04-09T06:09:31;some text;1;4
+5;2014-04-09T06:09:31;some text;1;4
+6;2014-04-09T06:09:31;some text;1;4
