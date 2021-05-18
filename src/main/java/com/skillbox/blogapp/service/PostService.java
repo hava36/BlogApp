@@ -2,12 +2,8 @@ package com.skillbox.blogapp.service;
 
 import com.skillbox.blogapp.model.dto.PostDto;
 import com.skillbox.blogapp.model.entity.Post;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing {@link Post}.

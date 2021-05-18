@@ -20,7 +20,7 @@ public class ApiTagController {
     @GetMapping(value = "/api/tag")
     public ResponseEntity<TagResponse> tags(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
 
-        TagResponse tagResponse = new TagResponse(tagService.findAllWithWeight(query));
+        var tagResponse = new TagResponse(tagService.findAllWithWeight(query));
         return new ResponseEntity<>(tagResponse, HttpStatus.OK);
 
     }

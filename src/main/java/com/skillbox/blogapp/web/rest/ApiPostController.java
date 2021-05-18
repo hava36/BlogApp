@@ -22,9 +22,9 @@ public class ApiPostController {
         @RequestParam(required = false, defaultValue = "0") Integer offset,
         @RequestParam(required = false, defaultValue = "10") Integer limit,
         @RequestParam(required = false, defaultValue = "recent") String mode) {
-        PostResponse postResponse = new PostResponse(
+        var postResponse = new PostResponse(
             postService.findAllWithOrderByModeLimitOffset(offset, limit, mode));
-        return new ResponseEntity(postResponse, HttpStatus.OK);
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
 }
