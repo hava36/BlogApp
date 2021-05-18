@@ -1,5 +1,7 @@
 package com.skillbox.blogapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.model.entity.PostComment;
 import com.skillbox.blogapp.model.entity.PostVote;
@@ -10,6 +12,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.jsoup.Jsoup;
 
 /**
  * A DTO for the {@link Post} entity.
@@ -17,6 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostDto implements Serializable {
+
+    private static final int MAX_COUNT_OF_ANNOUNCE = 150;
 
     private Integer id;
 
@@ -30,23 +35,54 @@ public class PostDto implements Serializable {
     private Instant time;
 
     @NotNull
+    private Long timestamp;
+
+    @NotNull
     private String title;
 
     @NotNull
     private String text;
 
     @NotNull
+    private String announce;
+
+    @NotNull
+    private Long likeCount;
+
+    @NotNull
+    private Long dislikeCount;
+
+    @NotNull
+    private Integer commentCount;
+
+    @NotNull
     private Integer viewCount;
 
+    @JsonIgnoreProperties(value = {"isModerator", "regTime", "email", "password", "code", "photo",
+        "posts"})
     private UserDto moderator;
 
     @NotNull
+    @JsonIgnoreProperties(value = {"isModerator", "regTime", "email", "password", "code", "photo",
+        "posts"})
     private UserDto user;
 
+    @JsonIgnore
     private Set<TagDto> tags;
 
+    @JsonIgnore
     private Set<PostComment> comments;
 
+    @JsonIgnore
     private Set<PostVote> votes;
+
+    public void setAnnounce(String text) {
+        String textWithoutTags = Jsoup.parse(text).text();
+        if (textWithoutTags.length() > MAX_COUNT_OF_ANNOUNCE) {
+            this.announce = textWithoutTags.substring(0, 150) + "...";
+        } else {
+            this.announce = textWithoutTags;
+        }
+    }
 
 }

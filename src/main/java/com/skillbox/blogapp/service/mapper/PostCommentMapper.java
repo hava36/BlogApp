@@ -2,6 +2,7 @@ package com.skillbox.blogapp.service.mapper;
 
 import com.skillbox.blogapp.model.dto.PostCommentDto;
 import com.skillbox.blogapp.model.entity.PostComment;
+import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,4 +23,10 @@ public interface PostCommentMapper extends EntityMapper<PostCommentDto, PostComm
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     PostCommentDto toDtoId(PostComment postComment);
+
+    @Named("idSet")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    Set<PostCommentDto> toDtoIdSet(Set<PostComment> comments);
+
 }

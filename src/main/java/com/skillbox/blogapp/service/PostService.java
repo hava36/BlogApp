@@ -2,7 +2,9 @@ package com.skillbox.blogapp.service;
 
 import com.skillbox.blogapp.model.dto.PostDto;
 import com.skillbox.blogapp.model.entity.Post;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,13 +37,13 @@ public interface PostService {
      */
     List<PostDto> findAll();
 
+
     /**
-     * Get all the posts with eager load of many-to-many relationships.
+     * Get all posts by filter.
      *
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<PostDto> findAllWithEagerRelationships(Pageable pageable);
+    List<PostDto> findAllWithOrderByModeLimitOffset(Integer offset, Integer limit, String mode);
 
     /**
      * Get the "id" post.
@@ -57,4 +59,5 @@ public interface PostService {
      * @param id the id of the entity.
      */
     void delete(Integer id);
+
 }
