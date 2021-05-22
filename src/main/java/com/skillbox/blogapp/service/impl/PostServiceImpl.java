@@ -1,11 +1,12 @@
 package com.skillbox.blogapp.service.impl;
 
 import com.skillbox.blogapp.model.dto.PostDto;
-import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.repository.PostRepository;
+import com.skillbox.blogapp.repository.PostViewRepositoryReadOnly;
 import com.skillbox.blogapp.repository.domain.OffsetBasedPageRequest;
 import com.skillbox.blogapp.service.PostService;
 import com.skillbox.blogapp.service.mapper.PostMapper;
+import com.skillbox.blogapp.service.mapper.PostViewMapper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link Post}.
+ * Service Implementation for managing {@link com.skillbox.blogapp.model.entity.Post} Service Implementation for managing {@link
+ * com.skillbox.blogapp.model.entity.PostView}.
  */
 @Service
 @Transactional
@@ -29,13 +32,21 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
+    private final PostViewRepositoryReadOnly postViewRepository;
+
     private final PostMapper postMapper;
+
+    private final PostViewMapper postViewMapper;
 
     private final Map<String, Map<String, PostSearchingHandler>> searchingHandlers;
 
-    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, PostViewRepositoryReadOnly postViewRepository, PostMapper postMapper,
+        PostViewMapper postViewMapper) {
         this.postRepository = postRepository;
+        this.postViewRepository = postViewRepository;
         this.postMapper = postMapper;
+        this.postViewMapper = postViewMapper;
+
         this.searchingHandlers = Map.of("mode", Map.of(
             "recent", new ModeRecentHandler(),
             "early", new ModeEarlyHandler(),
@@ -84,7 +95,7 @@ public class PostServiceImpl implements PostService {
      * @return the list of entities.
      */
     @Override
-    public List<PostDto> findAllWithOrderByModeLimitOffset(Integer offset, Integer limit,
+    public List<PostDto> findActivePostByMode(Integer offset, Integer limit,
         String mode) {
 
         if (!searchingHandlers.containsKey("mode")
@@ -95,10 +106,7 @@ public class PostServiceImpl implements PostService {
 
         return searchingHandlers
             .get("mode").get(mode)
-            .findAll(offset, limit)
-            .stream()
-            .map(postMapper::toDto)
-            .collect(Collectors.toList());
+            .findAll(offset, limit);
     }
 
     @Override
@@ -116,41 +124,64 @@ public class PostServiceImpl implements PostService {
 
     private interface PostSearchingHandler {
 
-        List<Post> findAll(int offset, int limit, String... params);
+        List<PostDto> findAll(int offset, int limit, String... params);
 
     }
 
     private class ModeRecentHandler implements PostSearchingHandler {
 
         @Override
-        public List<Post> findAll(int offset, int limit, String... params) {
+        public List<PostDto> findAll(int offset, int limit, String... params) {
             return postRepository
-                .findAll(new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"))).getContent();
+                .findAllActive(new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time")))
+                .getContent()
+                .stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
         }
     }
 
     private class ModeEarlyHandler implements PostSearchingHandler {
 
         @Override
-        public List<Post> findAll(int offset, int limit, String... params) {
+        public List<PostDto> findAll(int offset, int limit, String... params) {
+            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"));
             return postRepository
-                .findAll(new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"))).getContent();
+                .findAllActive(pageRequest)
+                .getContent()
+                .stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
         }
     }
 
     private class ModePopularHandler implements PostSearchingHandler {
 
         @Override
-        public List<Post> findAll(int offset, int limit, String... params) {
-            return postRepository.findAllPopularPosts(offset, limit);
+        public List<PostDto> findAll(int offset, int limit, String... params) {
+
+            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "commentCount"));
+
+            return postViewRepository
+                .findAll(pageRequest)
+                .getContent()
+                .stream()
+                .map(postViewMapper::toDto)
+                .collect(Collectors.toList());
         }
     }
 
     private class ModeBestHandler implements PostSearchingHandler {
 
         @Override
-        public List<Post> findAll(int offset, int limit, String... params) {
-            return postRepository.findAllBestPosts(offset, limit);
+        public List<PostDto> findAll(int offset, int limit, String... params) {
+            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "likeCount"));
+
+            return postViewRepository.findByIsActive(pageRequest, 1)
+                .getContent()
+                .stream()
+                .map(postViewMapper::toDto)
+                .collect(Collectors.toList());
         }
 
     }

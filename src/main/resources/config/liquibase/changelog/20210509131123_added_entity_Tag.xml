@@ -19,6 +19,61 @@
         </createTable>
     </changeSet>
 
+    <changeSet author="a.sviridenko" id="20210509131123-1">
+        <createView
+            replaceIfExists="false"
+            viewName="tag_id_post_count">
+            SELECT
+            `t2p`.`tag_id` AS `tag_id`,
+            COUNT(`t2p`.`post_id`) AS `post_count`
+            FROM
+            `blogapp`.`tag2post` `t2p`
+            GROUP BY `t2p`.`tag_id`
+        </createView>
+    </changeSet>
+
+    <changeSet author="a.sviridenko" id="20210509131124-1">
+        <createView
+            replaceIfExists="false"
+            viewName="tag_view">
+            SELECT
+            `t`.`id` AS `id`,
+            `t`.`name` AS `name`,
+            ((COALESCE(COUNT(`t2p`.`post_id`), 0) / COALESCE((SELECT
+            COUNT(`blogapp`.`t`.`post_count`)
+            FROM
+            `blogapp`.`tag_id_post_count` `t`),
+            1)) * (1 / (COALESCE((SELECT
+            MAX(`blogapp`.`t`.`post_count`)
+            FROM
+            `blogapp`.`tag_id_post_count` `t`),
+            1) / COALESCE((SELECT
+            COUNT(`blogapp`.`t`.`post_count`)
+            FROM
+            `blogapp`.`tag_id_post_count` `t`),
+            1)))) AS `weight`
+            FROM
+            (`blogapp`.`tag` `t`
+            LEFT JOIN `blogapp`.`tag2post` `t2p` ON ((`t`.`id` = `t2p`.`tag_id`)))
+            GROUP BY `t`.`id`
+        </createView>
+    </changeSet>
+
+    <changeSet author="a.sviridenko" id="20210509131125-1">
+        <createView
+            replaceIfExists="false"
+            viewName="post_view">SELECT `p`.`id` AS `id`, `p`.`is_active` AS `is_active`,
+            `p`.`moderation_status` AS `moderation_status`, `p`.`time` AS `time`, `p`.`title` AS
+            `title`, `p`.`text` AS `text`, `p`.`view_count` AS `view_count`, `p`.`moderator_id` AS
+            `moderator_id`, `p`.`user_id` AS `user_id`, (SELECT COUNT(`c`.`id`) FROM
+            `blogapp`.`post_comment` `c` WHERE (`c`.`post_id` = `p`.`id`)) AS `comment_count`,
+            (SELECT COUNT(`v`.`id`) FROM `blogapp`.`post_vote` `v` WHERE ((`v`.`post_id` = `p`.`id`)
+            AND (`v`.`value` = 1))) AS `like_count`, (SELECT COUNT(`v`.`id`) FROM
+            `blogapp`.`post_vote` `v` WHERE ((`v`.`post_id` = `p`.`id`) AND (`v`.`value` = -(1))))
+            AS `dislike_count` FROM `blogapp`.`post` `p`
+        </createView>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--
@@ -39,9 +94,9 @@
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
         <loadData
-          file="config/liquibase/fake-data/tag2post.csv"
-          separator=";"
-          tableName="tag2post">
+            file="config/liquibase/fake-data/tag2post.csv"
+            separator=";"
+            tableName="tag2post">
             <column name="id" type="numeric"/>
             <column name="tag_id" type="numeric"/>
             <column name="post_id" type="numeric"/>

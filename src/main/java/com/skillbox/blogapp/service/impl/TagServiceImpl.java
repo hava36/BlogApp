@@ -3,8 +3,10 @@ package com.skillbox.blogapp.service.impl;
 import com.skillbox.blogapp.model.dto.TagDto;
 import com.skillbox.blogapp.model.entity.Tag;
 import com.skillbox.blogapp.repository.TagRepository;
+import com.skillbox.blogapp.repository.TagViewReadOnlyRepository;
 import com.skillbox.blogapp.service.TagService;
 import com.skillbox.blogapp.service.mapper.TagMapper;
+import com.skillbox.blogapp.service.mapper.TagViewMapper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +27,18 @@ public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
 
+    private final TagViewReadOnlyRepository tagViewReadOnlyRepository;
+
     private final TagMapper tagMapper;
 
-    public TagServiceImpl(TagRepository tagRepository, TagMapper tagMapper) {
+    private final TagViewMapper tagViewMapper;
+
+    public TagServiceImpl(TagRepository tagRepository, TagViewReadOnlyRepository tagViewReadOnlyRepository, TagMapper tagMapper,
+        TagViewMapper tagViewMapper) {
         this.tagRepository = tagRepository;
+        this.tagViewReadOnlyRepository = tagViewReadOnlyRepository;
         this.tagMapper = tagMapper;
+        this.tagViewMapper = tagViewMapper;
     }
 
     @Override
@@ -66,8 +75,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TagDto> findAllWithWeight(String filterByName) {
-        return tagRepository.findAllWithWeight(filterByName).stream().map(tagMapper::toDto)
+    public List<TagDto> findViewByNameContainingIgnoreCase(String filterByName) {
+        return tagViewReadOnlyRepository.findByNameContainingIgnoreCase(filterByName).stream().map(tagViewMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
 

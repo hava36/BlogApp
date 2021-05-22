@@ -1,11 +1,9 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.SingletonSettingDto;
+import com.skillbox.blogapp.config.Constants;
 import com.skillbox.blogapp.model.entity.GlobalSetting;
-import com.skillbox.blogapp.repository.GlobalSettingRepository;
 import com.skillbox.blogapp.service.GlobalSettingService;
-import com.skillbox.blogapp.service.mapper.GlobalSettingMapper;
-import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,33 +18,15 @@ public class GlobalSettingServiceImpl implements GlobalSettingService {
 
     private final Logger log = LoggerFactory.getLogger(GlobalSettingServiceImpl.class);
 
-    private final GlobalSettingRepository globalSettingRepository;
-
-    private final GlobalSettingMapper globalSettingMapper;
-
-    public GlobalSettingServiceImpl(GlobalSettingRepository globalSettingRepository,
-        GlobalSettingMapper globalSettingMapper) {
-        this.globalSettingRepository = globalSettingRepository;
-        this.globalSettingMapper = globalSettingMapper;
-    }
-
-    @Override
-    public SingletonSettingDto save(SingletonSettingDto singletonSettingDto) {
-        log.debug("Request to save GlobalSetting : {}", singletonSettingDto);
-        return null;
-    }
-
     @Override
     @Transactional(readOnly = true)
-    public SingletonSettingDto findAll() {
+    public Map<String, Object> findAll() {
         log.debug("Request to get all GlobalSettings");
-        List<GlobalSetting> settings = globalSettingRepository.findAll();
-        return globalSettingMapper.toSingleDtoFromList(settings);
+        return Map.of(
+            "MULTIUSER_MODE", Constants.MULTIUSER_MODE,
+            "STATISTICS_IS_PUBLIC", Constants.STATISTICS_IS_PUBLIC,
+            "POST_PREMODERATION", Constants.POST_PREMODERATION);
     }
 
-    @Override
-    public void delete(Integer id) {
-        log.debug("Request to delete GlobalSetting : {}", id);
-        globalSettingRepository.deleteById(id);
-    }
+
 }

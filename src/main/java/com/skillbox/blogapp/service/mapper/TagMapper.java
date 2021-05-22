@@ -26,7 +26,6 @@ public interface TagMapper extends EntityMapper<TagDto, Tag> {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
-    @Mapping(target = "weight", source = "weight")
     TagDto toDto(Tag tag);
 
 }

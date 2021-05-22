@@ -1,6 +1,5 @@
 package com.skillbox.blogapp.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.model.entity.PostComment;
@@ -67,13 +66,10 @@ public class PostDto implements Serializable {
         "posts"})
     private UserDto user;
 
-    @JsonIgnore
     private Set<TagDto> tags;
 
-    @JsonIgnore
     private Set<PostComment> comments;
 
-    @JsonIgnore
     private Set<PostVote> votes;
 
     public void setAnnounce(String text) {

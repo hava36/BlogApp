@@ -1,6 +1,6 @@
 package com.skillbox.blogapp.web.rest;
 
-import com.skillbox.blogapp.model.response.TagResponse;
+import com.skillbox.blogapp.model.response.CustomTagResponse;
 import com.skillbox.blogapp.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ public class ApiTagController {
     }
 
     @GetMapping(value = "/api/tag")
-    public ResponseEntity<TagResponse> tags(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+    public ResponseEntity<CustomTagResponse> tags(@RequestParam(value = "query", required = false, defaultValue = "") String name) {
 
-        var tagResponse = new TagResponse(tagService.findAllWithWeight(query));
+        var tagResponse = new CustomTagResponse(tagService.findViewByNameContainingIgnoreCase(name));
         return new ResponseEntity<>(tagResponse, HttpStatus.OK);
 
     }

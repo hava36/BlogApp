@@ -34,7 +34,7 @@ public interface TagService {
     List<TagDto> findAll();
 
 
-    List<TagDto> findAllWithWeight(String filterByName);
+    List<TagDto> findViewByNameContainingIgnoreCase(String filterByName);
 
     /**
      * Get the "id" tag.
