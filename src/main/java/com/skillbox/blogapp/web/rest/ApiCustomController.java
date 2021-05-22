@@ -1,8 +1,8 @@
 package com.skillbox.blogapp.web.rest;
 
-import com.skillbox.blogapp.model.dto.SingletonSettingDto;
 import com.skillbox.blogapp.model.dto.InitDto;
 import com.skillbox.blogapp.service.GlobalSettingService;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ public class ApiCustomController {
     }
 
     @GetMapping("/settings")
-    public ResponseEntity<SingletonSettingDto> settings() {
+    public ResponseEntity<Map<String, Object>> settings() {
         return new ResponseEntity<>(globalSettingService.findAll(), HttpStatus.OK);
     }
 

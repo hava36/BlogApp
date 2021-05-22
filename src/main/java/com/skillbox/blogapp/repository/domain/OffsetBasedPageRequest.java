@@ -8,9 +8,9 @@ import org.springframework.data.domain.Sort;
 
 public class OffsetBasedPageRequest implements Pageable {
 
-    private long offset;
-    private int limit;
     private final Sort sort;
+    private final long offset;
+    private final int limit;
 
     public OffsetBasedPageRequest(long offset, int limit, Sort sort) {
         if (offset < 0) {
@@ -22,7 +22,10 @@ public class OffsetBasedPageRequest implements Pageable {
         this.limit = limit;
         this.offset = offset;
         this.sort = sort;
+    }
 
+    public OffsetBasedPageRequest(long offset, int limit) {
+        this(offset, limit, Sort.unsorted());
     }
 
     @Override
@@ -72,9 +75,13 @@ public class OffsetBasedPageRequest implements Pageable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof OffsetBasedPageRequest)) return false;
+        if (!(o instanceof OffsetBasedPageRequest)) {
+            return false;
+        }
 
         OffsetBasedPageRequest that = (OffsetBasedPageRequest) o;
 

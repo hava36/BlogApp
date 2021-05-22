@@ -7,14 +7,14 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class PostResponse implements Serializable {
+public class CustomPostResponse implements Serializable {
 
-    private Integer count;
+    private final Integer count;
 
-    @JsonIgnoreProperties(value = {"time", "isActive", "moderationStatus", "text", "moderator"})
-    private List<PostDto> posts;
+    @JsonIgnoreProperties(value = {"time", "isActive", "moderationStatus", "text", "moderator", "tags", "comments", "votes"})
+    private final List<PostDto> posts;
 
-    public PostResponse(List<PostDto> posts) {
+    public CustomPostResponse(List<PostDto> posts) {
         this.count = posts.size();
         this.posts = posts;
     }

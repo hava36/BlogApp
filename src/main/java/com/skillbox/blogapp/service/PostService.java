@@ -33,13 +33,12 @@ public interface PostService {
      */
     List<PostDto> findAll();
 
-
     /**
      * Get all posts by filter.
      *
      * @return the list of entities.
      */
-    List<PostDto> findAllWithOrderByModeLimitOffset(Integer offset, Integer limit, String mode);
+    List<PostDto> findActivePostByMode(Integer offset, Integer limit, String mode);
 
     /**
      * Get the "id" post.

@@ -1,6 +1,6 @@
 package com.skillbox.blogapp.web.rest;
 
-import com.skillbox.blogapp.model.response.PostResponse;
+import com.skillbox.blogapp.model.response.CustomPostResponse;
 import com.skillbox.blogapp.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +18,12 @@ public class ApiPostController {
     }
 
     @GetMapping("/api/post")
-    public ResponseEntity<PostResponse> posts(
+    public ResponseEntity<CustomPostResponse> posts(
         @RequestParam(required = false, defaultValue = "0") Integer offset,
         @RequestParam(required = false, defaultValue = "10") Integer limit,
         @RequestParam(required = false, defaultValue = "recent") String mode) {
-        var postResponse = new PostResponse(
-            postService.findAllWithOrderByModeLimitOffset(offset, limit, mode));
+        var postResponse = new CustomPostResponse(
+            postService.findActivePostByMode(offset, limit, mode));
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 

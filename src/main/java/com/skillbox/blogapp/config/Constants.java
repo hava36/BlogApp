@@ -1,8 +1,11 @@
 package com.skillbox.blogapp.config;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Application constants.
  */
+@Component
 public final class Constants {
 
     // Regex for acceptable logins
@@ -10,6 +13,10 @@ public final class Constants {
 
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "ru";
+
+    public static final boolean MULTIUSER_MODE = false;
+    public static final boolean POST_PREMODERATION = true;
+    public static final boolean STATISTICS_IS_PUBLIC = true;
 
     private Constants() {
     }
