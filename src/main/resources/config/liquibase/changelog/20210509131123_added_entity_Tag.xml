@@ -40,17 +40,19 @@
             `t`.`id` AS `id`,
             `t`.`name` AS `name`,
             ((COALESCE(COUNT(`t2p`.`post_id`), 0) / COALESCE((SELECT
-            COUNT(`blogapp`.`t`.`post_count`)
+            COUNT(*)
             FROM
-            `blogapp`.`tag_id_post_count` `t`),
+            `blogapp`.`post` `p`
+            ),
             1)) * (1 / (COALESCE((SELECT
             MAX(`blogapp`.`t`.`post_count`)
             FROM
             `blogapp`.`tag_id_post_count` `t`),
             1) / COALESCE((SELECT
-            COUNT(`blogapp`.`t`.`post_count`)
+            COUNT(*)
             FROM
-            `blogapp`.`tag_id_post_count` `t`),
+            `blogapp`.`post` `p`
+            ),
             1)))) AS `weight`
             FROM
             (`blogapp`.`tag` `t`
