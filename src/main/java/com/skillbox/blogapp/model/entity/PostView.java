@@ -13,12 +13,14 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Immutable;
 
 /**
  * A Post.
  */
 @Entity
 @Table(name = "post_view")
+@Immutable
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")

@@ -106,7 +106,7 @@ public class PostServiceImpl implements PostService {
 
         return searchingHandlers
             .get("mode").get(mode)
-            .findAll(offset, limit);
+            .find(offset, limit);
     }
 
     @Override
@@ -124,16 +124,17 @@ public class PostServiceImpl implements PostService {
 
     private interface PostSearchingHandler {
 
-        List<PostDto> findAll(int offset, int limit, String... params);
+        List<PostDto> find(int offset, int limit, String... params);
 
     }
 
     private class ModeRecentHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> findAll(int offset, int limit, String... params) {
+        public List<PostDto> find(int offset, int limit, String... params) {
+            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
             return postRepository
-                .findAllActive(new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time")))
+                .findByIsActive(pageRequest, 1)
                 .getContent()
                 .stream()
                 .map(postMapper::toDto)
@@ -144,10 +145,10 @@ public class PostServiceImpl implements PostService {
     private class ModeEarlyHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> findAll(int offset, int limit, String... params) {
+        public List<PostDto> find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"));
             return postRepository
-                .findAllActive(pageRequest)
+                .findByIsActive(pageRequest, 1)
                 .getContent()
                 .stream()
                 .map(postMapper::toDto)
@@ -158,12 +159,12 @@ public class PostServiceImpl implements PostService {
     private class ModePopularHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> findAll(int offset, int limit, String... params) {
+        public List<PostDto> find(int offset, int limit, String... params) {
 
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "commentCount"));
 
             return postViewRepository
-                .findAll(pageRequest)
+                .findByIsActive(pageRequest, 1)
                 .getContent()
                 .stream()
                 .map(postViewMapper::toDto)
@@ -174,7 +175,7 @@ public class PostServiceImpl implements PostService {
     private class ModeBestHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> findAll(int offset, int limit, String... params) {
+        public List<PostDto> find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "likeCount"));
 
             return postViewRepository.findByIsActive(pageRequest, 1)
