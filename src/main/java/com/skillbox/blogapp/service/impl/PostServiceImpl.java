@@ -1,12 +1,14 @@
 package com.skillbox.blogapp.service.impl;
 
 import com.skillbox.blogapp.model.dto.PostDto;
+import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
 import com.skillbox.blogapp.repository.PostRepository;
 import com.skillbox.blogapp.repository.PostViewRepositoryReadOnly;
 import com.skillbox.blogapp.repository.domain.OffsetBasedPageRequest;
 import com.skillbox.blogapp.service.PostService;
 import com.skillbox.blogapp.service.mapper.PostMapper;
 import com.skillbox.blogapp.service.mapper.PostViewMapper;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +136,7 @@ public class PostServiceImpl implements PostService {
         public List<PostDto> find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
             return postRepository
-                .findByIsActive(pageRequest, 1)
+                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postMapper::toDto)
@@ -148,7 +150,7 @@ public class PostServiceImpl implements PostService {
         public List<PostDto> find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"));
             return postRepository
-                .findByIsActive(pageRequest, 1)
+                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postMapper::toDto)
@@ -164,7 +166,7 @@ public class PostServiceImpl implements PostService {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "commentCount"));
 
             return postViewRepository
-                .findByIsActive(pageRequest, 1)
+                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postViewMapper::toDto)
@@ -178,7 +180,7 @@ public class PostServiceImpl implements PostService {
         public List<PostDto> find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "likeCount"));
 
-            return postViewRepository.findByIsActive(pageRequest, 1)
+            return postViewRepository.findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postViewMapper::toDto)
