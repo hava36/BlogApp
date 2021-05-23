@@ -1,9 +1,12 @@
 package com.skillbox.blogapp.model.entity;
 
+import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,6 +42,11 @@ public class PostView implements Serializable {
     @NotNull
     @Column(name = "is_active", nullable = false)
     private Integer isActive;
+
+    @NotNull
+    @Column(name = "moderation_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ModerationStatus moderationStatus;
 
     @NotNull
     @Column(name = "title", nullable = false)

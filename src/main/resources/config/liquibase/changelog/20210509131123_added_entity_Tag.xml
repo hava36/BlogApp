@@ -64,15 +64,39 @@
     <changeSet author="a.sviridenko" id="20210509131125-1">
         <createView
             replaceIfExists="false"
-            viewName="post_view">SELECT `p`.`id` AS `id`, `p`.`is_active` AS `is_active`,
-            `p`.`moderation_status` AS `moderation_status`, `p`.`time` AS `time`, `p`.`title` AS
-            `title`, `p`.`text` AS `text`, `p`.`view_count` AS `view_count`, `p`.`moderator_id` AS
-            `moderator_id`, `p`.`user_id` AS `user_id`, (SELECT COUNT(`c`.`id`) FROM
-            `blogapp`.`post_comment` `c` WHERE (`c`.`post_id` = `p`.`id`)) AS `comment_count`,
-            (SELECT COUNT(`v`.`id`) FROM `blogapp`.`post_vote` `v` WHERE ((`v`.`post_id` = `p`.`id`)
-            AND (`v`.`value` = 1))) AS `like_count`, (SELECT COUNT(`v`.`id`) FROM
-            `blogapp`.`post_vote` `v` WHERE ((`v`.`post_id` = `p`.`id`) AND (`v`.`value` = -(1))))
-            AS `dislike_count` FROM `blogapp`.`post` `p`
+            viewName="post_view">
+            SELECT
+            `p`.`id` AS `id`,
+            `p`.`is_active` AS `is_active`,
+            `p`.`moderation_status` AS `moderation_status`,
+            `p`.`time` AS `time`,
+            `p`.`title` AS `title`,
+            `p`.`text` AS `text`,
+            `p`.`view_count` AS `view_count`,
+            `p`.`moderator_id` AS `moderator_id`,
+            `p`.`user_id` AS `user_id`,
+            (SELECT
+            COUNT(`c`.`id`)
+            FROM
+            `blogapp`.`post_comment` `c`
+            WHERE
+            (`c`.`post_id` = `p`.`id`)) AS `comment_count`,
+            (SELECT
+            COUNT(`v`.`id`)
+            FROM
+            `blogapp`.`post_vote` `v`
+            WHERE
+            ((`v`.`post_id` = `p`.`id`)
+            AND (`v`.`value` = 1))) AS `like_count`,
+            (SELECT
+            COUNT(`v`.`id`)
+            FROM
+            `blogapp`.`post_vote` `v`
+            WHERE
+            ((`v`.`post_id` = `p`.`id`)
+            AND (`v`.`value` = -(1)))) AS `dislike_count`
+            FROM
+            `blogapp`.`post` `p`
         </createView>
     </changeSet>
 
