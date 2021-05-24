@@ -2,6 +2,7 @@ package com.skillbox.blogapp.service;
 
 import com.skillbox.blogapp.model.dto.PostDto;
 import com.skillbox.blogapp.model.entity.Post;
+import com.skillbox.blogapp.model.response.CustomPostResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public interface PostService {
      *
      * @return the list of entities.
      */
-    List<PostDto> findActivePostByMode(Integer offset, Integer limit, String mode);
+    CustomPostResponse findActivePostByMode(Integer offset, Integer limit, String mode);
 
     /**
      * Get the "id" post.
