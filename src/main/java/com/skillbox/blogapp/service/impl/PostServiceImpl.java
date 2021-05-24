@@ -2,6 +2,7 @@ package com.skillbox.blogapp.service.impl;
 
 import com.skillbox.blogapp.model.dto.PostDto;
 import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.response.CustomPostResponse;
 import com.skillbox.blogapp.repository.PostRepository;
 import com.skillbox.blogapp.repository.PostViewRepositoryReadOnly;
 import com.skillbox.blogapp.repository.domain.OffsetBasedPageRequest;
@@ -97,7 +98,7 @@ public class PostServiceImpl implements PostService {
      * @return the list of entities.
      */
     @Override
-    public List<PostDto> findActivePostByMode(Integer offset, Integer limit,
+    public CustomPostResponse findActivePostByMode(Integer offset, Integer limit,
         String mode) {
 
         if (!searchingHandlers.containsKey("mode")
@@ -126,65 +127,83 @@ public class PostServiceImpl implements PostService {
 
     private interface PostSearchingHandler {
 
-        List<PostDto> find(int offset, int limit, String... params);
+        CustomPostResponse find(int offset, int limit, String... params);
 
     }
 
     private class ModeRecentHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> find(int offset, int limit, String... params) {
+        public CustomPostResponse find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
-            return postRepository
+
+            List<PostDto> posts = postViewRepository
                 .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
-                .map(postMapper::toDto)
+                .map(postViewMapper::toDto)
                 .collect(Collectors.toList());
+
+            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
+
+            return new CustomPostResponse(posts, totalCount);
         }
     }
 
     private class ModeEarlyHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> find(int offset, int limit, String... params) {
+        public CustomPostResponse find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"));
-            return postRepository
+
+            List<PostDto> posts = postViewRepository
                 .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
-                .map(postMapper::toDto)
+                .map(postViewMapper::toDto)
                 .collect(Collectors.toList());
+
+            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
+
+            return new CustomPostResponse(posts, totalCount);
         }
     }
 
     private class ModePopularHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> find(int offset, int limit, String... params) {
+        public CustomPostResponse find(int offset, int limit, String... params) {
 
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "commentCount"));
 
-            return postViewRepository
+            List<PostDto> posts = postViewRepository
                 .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postViewMapper::toDto)
                 .collect(Collectors.toList());
+
+            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
+
+            return new CustomPostResponse(posts, totalCount);
         }
     }
 
     private class ModeBestHandler implements PostSearchingHandler {
 
         @Override
-        public List<PostDto> find(int offset, int limit, String... params) {
+        public CustomPostResponse find(int offset, int limit, String... params) {
             Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "likeCount"));
 
-            return postViewRepository.findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
+            List<PostDto> posts = postViewRepository.findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
                 .getContent()
                 .stream()
                 .map(postViewMapper::toDto)
                 .collect(Collectors.toList());
+
+            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
+
+            return new CustomPostResponse(posts, totalCount);
         }
 
     }

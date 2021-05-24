@@ -22,9 +22,7 @@ public class ApiPostController {
         @RequestParam(required = false, defaultValue = "0") Integer offset,
         @RequestParam(required = false, defaultValue = "10") Integer limit,
         @RequestParam(required = false, defaultValue = "recent") String mode) {
-        var postResponse = new CustomPostResponse(
-            postService.findActivePostByMode(offset, limit, mode));
-        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+        return new ResponseEntity<>(postService.findActivePostByMode(offset, limit, mode), HttpStatus.OK);
     }
 
 }

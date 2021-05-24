@@ -9,13 +9,13 @@ import lombok.Getter;
 @Getter
 public class CustomPostResponse implements Serializable {
 
-    private final Integer count;
+    private final Long count;
 
     @JsonIgnoreProperties(value = {"time", "isActive", "moderationStatus", "text", "moderator", "tags", "comments", "votes"})
     private final List<PostDto> posts;
 
-    public CustomPostResponse(List<PostDto> posts) {
-        this.count = posts.size();
+    public CustomPostResponse(List<PostDto> posts, Long totalCount) {
+        this.count = totalCount;
         this.posts = posts;
     }
 

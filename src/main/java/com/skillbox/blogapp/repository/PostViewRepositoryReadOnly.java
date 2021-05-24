@@ -16,4 +16,8 @@ public interface PostViewRepositoryReadOnly extends ReadOnlyRepository<PostView,
     Page<PostView> findByIsActiveAndStatusLessThenInstant(Pageable pageable, @Param("isActive") Integer isActive, @Param("status") ModerationStatus status,
         @Param("instant") Instant instant);
 
+    @Query(value = "select count(p) from Post p where isActive = :isActive and moderationStatus = :status and time <= :time")
+    Long countByIsActiveAndStatusLessThenInstant(@Param("isActive") Integer isActive, @Param("status") ModerationStatus status,
+        @Param("time") Instant instant);
+
 }
