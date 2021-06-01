@@ -10,13 +10,11 @@ import org.mapstruct.Named;
 /**
  * Mapper for the entity {@link User} and its DTO {@link UserDto}.
  */
-@Mapper(componentModel = "spring", uses = {PostMapper.class})
+@Mapper(componentModel = "spring", uses = {PostDetailedMapper.class})
 public interface UserMapper extends EntityMapper<UserDto, User> {
 
-    @Mapping(target = "posts", source = "posts")
     User toEntity(UserDto dto);
 
-    @Mapping(target = "posts", source = "posts")
     UserDto toDto(User entity);
 
     @Named("idName")

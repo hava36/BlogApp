@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 /**
  * Mapper for the entity {@link PostComment} and its DTO {@link PostCommentDto}.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, PostMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, PostDetailedMapper.class})
 public interface PostCommentMapper extends EntityMapper<PostCommentDto, PostComment> {
 
     @Mapping(target = "parent", source = "parent")

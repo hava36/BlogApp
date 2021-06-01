@@ -1,9 +1,10 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.PostDto;
+import com.skillbox.blogapp.model.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.model.entity.Post;
-import com.skillbox.blogapp.model.response.CustomPostResponse;
-import java.util.List;
+import com.skillbox.blogapp.model.response.CalendarResponseList;
+import com.skillbox.blogapp.model.response.PostResponseList;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -11,49 +12,22 @@ import java.util.Optional;
  */
 public interface PostService {
 
-    /**
-     * Save a post.
-     *
-     * @param postDto the entity to save.
-     * @return the persisted entity.
-     */
-    PostDto save(PostDto postDto);
+    PostDetailedDto save(PostDetailedDto postBriefDto);
 
-    /**
-     * Partially updates a post.
-     *
-     * @param postDto the entity to update partially.
-     * @return the persisted entity.
-     */
-    Optional<PostDto> partialUpdate(PostDto postDto);
+    Optional<PostDetailedDto> partialUpdate(PostDetailedDto postBriefDto);
 
-    /**
-     * Get all the posts.
-     *
-     * @return the list of entities.
-     */
-    List<PostDto> findAll();
+    PostResponseList findEnabledByMode(String mode, Long offset, Integer limit);
 
-    /**
-     * Get all posts by filter.
-     *
-     * @return the list of entities.
-     */
-    CustomPostResponse findActivePostByMode(Integer offset, Integer limit, String mode);
+    PostResponseList findEnabledByContent(String content, Long offset, Integer limit);
 
-    /**
-     * Get the "id" post.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    Optional<PostDto> findOne(Integer id);
+    PostResponseList findEnabledByDate(LocalDate date, Long offset, Integer limit);
 
-    /**
-     * Delete the "id" post.
-     *
-     * @param id the id of the entity.
-     */
+    PostResponseList findEnabledByTag(String tag, Long offset, Integer limit);
+
+    CalendarResponseList findEnabledWithinYear(Integer year);
+
+    Optional<PostDetailedDto> findOne(Integer id);
+
     void delete(Integer id);
 
 }

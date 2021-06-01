@@ -7,14 +7,14 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class CustomTagResponse implements Serializable {
+public class TagResponseList implements Serializable {
 
     private final Integer count;
 
     @JsonIgnoreProperties(value = {"id"})
     private final List<TagDto> tags;
 
-    public CustomTagResponse(List<TagDto> tags) {
+    public TagResponseList(List<TagDto> tags) {
         this.count = tags.size();
         this.tags = tags;
     }
