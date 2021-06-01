@@ -1,19 +1,27 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.PostDto;
+import com.skillbox.blogapp.model.dto.post.PostBriefDto;
+import com.skillbox.blogapp.model.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
-import com.skillbox.blogapp.model.response.CustomPostResponse;
+import com.skillbox.blogapp.model.response.CalendarResponseList;
+import com.skillbox.blogapp.model.response.PostResponseList;
 import com.skillbox.blogapp.repository.PostRepository;
 import com.skillbox.blogapp.repository.PostViewRepositoryReadOnly;
 import com.skillbox.blogapp.repository.domain.OffsetBasedPageRequest;
 import com.skillbox.blogapp.service.PostService;
-import com.skillbox.blogapp.service.mapper.PostMapper;
-import com.skillbox.blogapp.service.mapper.PostViewMapper;
+import com.skillbox.blogapp.service.mapper.PostDetailedMapper;
+import com.skillbox.blogapp.service.mapper.PostViewBriefMapper;
+import java.math.BigInteger;
+import java.sql.Date;
 import java.time.Instant;
-import java.util.LinkedList;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +31,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service Implementation for managing {@link com.skillbox.blogapp.model.entity.Post} Service Implementation for managing {@link
- * com.skillbox.blogapp.model.entity.PostView}.
- */
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
@@ -35,177 +39,145 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
+    private final PostDetailedMapper postDetailedMapper;
+
     private final PostViewRepositoryReadOnly postViewRepository;
 
-    private final PostMapper postMapper;
+    private final PostViewBriefMapper postViewBriefMapper;
 
-    private final PostViewMapper postViewMapper;
+    private final Map<String, Sort> modeSortingSettings;
 
-    private final Map<String, Map<String, PostSearchingHandler>> searchingHandlers;
-
-    public PostServiceImpl(PostRepository postRepository, PostViewRepositoryReadOnly postViewRepository, PostMapper postMapper,
-        PostViewMapper postViewMapper) {
+    public PostServiceImpl(PostRepository postRepository, PostDetailedMapper postDetailedMapper,
+        PostViewRepositoryReadOnly postViewRepository,
+        PostViewBriefMapper postViewBriefMapper) {
         this.postRepository = postRepository;
+        this.postDetailedMapper = postDetailedMapper;
         this.postViewRepository = postViewRepository;
-        this.postMapper = postMapper;
-        this.postViewMapper = postViewMapper;
-
-        this.searchingHandlers = Map.of("mode", Map.of(
-            "recent", new ModeRecentHandler(),
-            "early", new ModeEarlyHandler(),
-            "popular", new ModePopularHandler(),
-            "best", new ModeBestHandler()));
+        this.postViewBriefMapper = postViewBriefMapper;
+        this.modeSortingSettings = Map.of("best", Sort.by(Direction.DESC, "likeCount"),
+            "popular", Sort.by(Direction.DESC, "commentCount"),
+            "recent", Sort.by(Direction.DESC, "time"),
+            "early", Sort.by(Direction.ASC, "time"));
     }
 
     @Override
-    public PostDto save(PostDto postDto) {
-        log.debug("Request to save Post : {}", postDto);
-        var post = postMapper.toEntity(postDto);
+    public PostDetailedDto save(PostDetailedDto postDetailedDto) {
+        log.debug("Request to save Post : {}", postDetailedDto);
+        var post = postDetailedMapper.toEntity(postDetailedDto);
         post = postRepository.save(post);
-        return postMapper.toDto(post);
+        return postDetailedMapper.toDto(post);
     }
 
     @Override
-    public Optional<PostDto> partialUpdate(PostDto postDto) {
-        log.debug("Request to partially update Post : {}", postDto);
+    public Optional<PostDetailedDto> partialUpdate(PostDetailedDto postDetailedDto) {
+        log.debug("Request to partially update Post : {}", postDetailedDto);
 
         return postRepository
-            .findById(postDto.getId())
+            .findById(postDetailedDto.getId())
             .map(
                 existingPost -> {
-                    postMapper.partialUpdate(existingPost, postDto);
+                    postDetailedMapper.partialUpdate(existingPost, postDetailedDto);
                     return existingPost;
                 }
             )
             .map(postRepository::save)
-            .map(postMapper::toDto);
+            .map(postDetailedMapper::toDto);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<PostDto> findAll() {
-        log.debug("Request to get all Posts");
-        return postRepository
-            .findAll()
-            .stream()
-            .map(postMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
+    public PostResponseList findEnabledByMode(String mode, Long offset, Integer limit) {
 
-    /**
-     * Get all posts by filter.
-     *
-     * @return the list of entities.
-     */
-    @Override
-    public CustomPostResponse findActivePostByMode(Integer offset, Integer limit,
-        String mode) {
-
-        if (!searchingHandlers.containsKey("mode")
-            && !searchingHandlers.get("mode").containsKey(mode)) {
-            throw new IllegalArgumentException(
-                String.format("Unrecognized mode parameter %s", mode));
+        if (!modeSortingSettings.containsKey(mode)) {
+            throw new IllegalArgumentException(String.format("undefined mode parameter %s", mode));
         }
 
-        return searchingHandlers
-            .get("mode").get(mode)
-            .find(offset, limit);
+        Pageable pageRequest = new OffsetBasedPageRequest(offset.shortValue(), limit, modeSortingSettings.get(mode));
+
+        List<PostBriefDto> posts = postViewRepository
+            .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
+            .getContent()
+            .stream()
+            .map(postViewBriefMapper::toDto)
+            .collect(Collectors.toList());
+
+        Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
+
+        return new PostResponseList(posts, totalCount);
+    }
+
+    @Override
+    public PostResponseList findEnabledByContent(String content, Long offset, Integer limit) {
+
+        Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
+
+        List<PostBriefDto> posts = postViewRepository.findIsActiveAndStatusLessThenInstantAndTextContainingIgnoreCase(
+            pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now(), content)
+            .stream().map(postViewBriefMapper::toDto).collect(Collectors.toList());
+
+        Long totalCount = postViewRepository
+            .countIsActivePostsAndStatusLessThenInstantAndTextContainingIgnoreCase(1, ModerationStatus.ACCEPTED, Instant.now(),
+                content);
+
+        return new PostResponseList(posts, totalCount);
+    }
+
+    @Override
+    public PostResponseList findEnabledByDate(LocalDate date, Long offset, Integer limit) {
+
+        var startDate = date.atStartOfDay().toInstant(ZoneOffset.UTC);
+        var endDate = date.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+
+        Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
+
+        List<PostBriefDto> posts = postViewRepository.findByIsActiveAndStatusBetweenDates(
+            pageRequest, 1, ModerationStatus.ACCEPTED, startDate, endDate)
+            .stream().map(postViewBriefMapper::toDto).collect(Collectors.toList());
+
+        Long totalCount = postViewRepository
+            .countByIsActiveAndStatusBetweenDates(1, ModerationStatus.ACCEPTED, startDate, endDate);
+
+        return new PostResponseList(posts, totalCount);
+    }
+
+    @Override
+    public PostResponseList findEnabledByTag(String tag, Long offset, Integer limit) {
+
+        Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
+
+        List<PostBriefDto> posts = postViewRepository.findIsActiveAndStatusLessThenInstantAndByTag(
+            pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now(), tag)
+            .stream().map(postViewBriefMapper::toDto).collect(Collectors.toList());
+
+        Long totalCount = postViewRepository.countIsActiveAndStatusLessThenInstantAndByTag(1, ModerationStatus.ACCEPTED, Instant.now(), tag);
+
+        return new PostResponseList(posts, totalCount);
+    }
+
+    @Override
+    public CalendarResponseList findEnabledWithinYear(Integer year) {
+
+        Map<String, BigInteger> postGroupingByDay =
+            postRepository.findIsActiveAndYearAndStatusLessThenInstantGroupingByDays(year, 1, ModerationStatus.ACCEPTED, Instant.now()).stream()
+                .collect(
+                    Collectors.toMap(o -> ((Date) o[0]).toLocalDate().format(DateTimeFormatter.ISO_DATE), o -> (BigInteger) o[1],
+                        (b1, b2) -> b1, TreeMap::new));
+
+        Set<Integer> years = postRepository.findIsActiveAndYearAndStatusLessThenInstantGroupingByYear(1, ModerationStatus.ACCEPTED, Instant.now());
+
+        return new CalendarResponseList(years, postGroupingByDay);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PostDto> findOne(Integer id) {
+    public Optional<PostDetailedDto> findOne(Integer id) {
         log.debug("Request to get Post : {}", id);
-        return postRepository.findById(id).map(postMapper::toDto);
+        return postRepository.findById(id).map(postDetailedMapper::toDto);
     }
 
     @Override
     public void delete(Integer id) {
         log.debug("Request to delete Post : {}", id);
         postRepository.deleteById(id);
-    }
-
-    private interface PostSearchingHandler {
-
-        CustomPostResponse find(int offset, int limit, String... params);
-
-    }
-
-    private class ModeRecentHandler implements PostSearchingHandler {
-
-        @Override
-        public CustomPostResponse find(int offset, int limit, String... params) {
-            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "time"));
-
-            List<PostDto> posts = postViewRepository
-                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
-                .getContent()
-                .stream()
-                .map(postViewMapper::toDto)
-                .collect(Collectors.toList());
-
-            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
-
-            return new CustomPostResponse(posts, totalCount);
-        }
-    }
-
-    private class ModeEarlyHandler implements PostSearchingHandler {
-
-        @Override
-        public CustomPostResponse find(int offset, int limit, String... params) {
-            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.ASC, "time"));
-
-            List<PostDto> posts = postViewRepository
-                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
-                .getContent()
-                .stream()
-                .map(postViewMapper::toDto)
-                .collect(Collectors.toList());
-
-            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
-
-            return new CustomPostResponse(posts, totalCount);
-        }
-    }
-
-    private class ModePopularHandler implements PostSearchingHandler {
-
-        @Override
-        public CustomPostResponse find(int offset, int limit, String... params) {
-
-            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "commentCount"));
-
-            List<PostDto> posts = postViewRepository
-                .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
-                .getContent()
-                .stream()
-                .map(postViewMapper::toDto)
-                .collect(Collectors.toList());
-
-            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
-
-            return new CustomPostResponse(posts, totalCount);
-        }
-    }
-
-    private class ModeBestHandler implements PostSearchingHandler {
-
-        @Override
-        public CustomPostResponse find(int offset, int limit, String... params) {
-            Pageable pageRequest = new OffsetBasedPageRequest(offset, limit, Sort.by(Direction.DESC, "likeCount"));
-
-            List<PostDto> posts = postViewRepository.findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
-                .getContent()
-                .stream()
-                .map(postViewMapper::toDto)
-                .collect(Collectors.toList());
-
-            Long totalCount = postViewRepository.countByIsActiveAndStatusLessThenInstant(1, ModerationStatus.ACCEPTED, Instant.now());
-
-            return new CustomPostResponse(posts, totalCount);
-        }
-
     }
 
 }

@@ -1,9 +1,10 @@
 package com.skillbox.blogapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.skillbox.blogapp.model.entity.CaptchaCode;
 import java.io.Serializable;
 import java.time.Instant;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,15 +15,19 @@ import lombok.Setter;
 @Setter
 public class CaptchaCodeDto implements Serializable {
 
+    @JsonIgnore
     private Integer id;
 
-    @NotNull
+    @JsonIgnore
     private Instant time;
 
-    @NotNull
+    @JsonIgnore
     private String code;
 
-    @NotNull
+    @JsonProperty("secret")
     private String secretCode;
+
+    @JsonProperty("image")
+    private String imageInBase64;
 
 }

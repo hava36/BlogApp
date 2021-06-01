@@ -1,10 +1,9 @@
 package com.skillbox.blogapp.model.dto;
 
-import com.skillbox.blogapp.model.entity.Post;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.skillbox.blogapp.model.entity.User;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,19 +22,24 @@ public class UserDto implements Serializable {
 
     private Instant regTime;
 
-    @NotNull
     private String name;
 
-    @NotNull
+    @JsonProperty("e_mail")
     private String email;
 
-    @NotNull
     private String password;
 
     private String code;
 
     private String photo;
 
-    private Set<Post> posts;
+    @JsonProperty("captcha")
+    private String captchaCode;
 
+    @JsonProperty("captcha_secret")
+    private String captchaSecretCode;
+
+    public UserDto() {
+        this.isModerator = 0;
+    }
 }

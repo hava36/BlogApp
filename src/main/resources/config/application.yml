@@ -92,6 +92,8 @@ spring:
       email: mail@mail.ru
       copyright: Дмитрий Сергеев
       copyrightFrom: 2005
+  captcha:
+    expired_seconds: 3600
   jpa:
     open-in-view: false
     properties:

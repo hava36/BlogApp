@@ -1,6 +1,9 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.model.dto.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.skillbox.blogapp.model.dto.TagDto;
+import com.skillbox.blogapp.model.dto.UserDto;
 import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.model.entity.PostComment;
 import com.skillbox.blogapp.model.entity.PostVote;
@@ -18,7 +21,7 @@ import org.jsoup.Jsoup;
  */
 @Getter
 @Setter
-public class PostDto implements Serializable {
+public class PostBriefDto implements Serializable {
 
     private static final int MAX_COUNT_OF_ANNOUNCE = 150;
 
@@ -31,6 +34,7 @@ public class PostDto implements Serializable {
     private ModerationStatus moderationStatus;
 
     @NotNull
+    @JsonIgnore
     private Instant time;
 
     @NotNull
@@ -57,6 +61,7 @@ public class PostDto implements Serializable {
     @NotNull
     private Integer viewCount;
 
+    @JsonIgnore
     @JsonIgnoreProperties(value = {"isModerator", "regTime", "email", "password", "code", "photo",
         "posts"})
     private UserDto moderator;
@@ -66,10 +71,13 @@ public class PostDto implements Serializable {
         "posts"})
     private UserDto user;
 
+    @JsonIgnoreProperties(value = {"id", "weight"})
     private Set<TagDto> tags;
 
+    @JsonIgnoreProperties(value = {"parent", "post"})
     private Set<PostComment> comments;
 
+    @JsonIgnore
     private Set<PostVote> votes;
 
     public void setAnnounce(String text) {

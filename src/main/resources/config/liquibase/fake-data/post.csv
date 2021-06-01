@@ -5,13 +5,13 @@ id;is_active;moderation_status;time;title;text;view_count;user_id
 4;1;ACCEPTED;2021-04-09T06:09:31;Football;about football;3;1
 5;1;ACCEPTED;2021-05-09T06:09:31;Football;about football;3;1
 6;-1;NEW;2021-06-09T06:09:31;Football;about football;3;1
-7;1;ACCEPTED;2021-07-09T06:09:31;Football;about football;3;1
-8;1;ACCEPTED;2021-08-09T06:09:31;Football;about football;3;1
-9;1;ACCEPTED;2021-09-09T06:09:31;Football;about football;3;1
-10;1;NEW;2021-10-09T06:09:31;Football;about football;3;1
-11;1;ACCEPTED;2021-11-09T06:09:31;Football;about football;3;1
-12;-1;NEW;2021-12-09T06:09:31;Football;about football;3;1
+7;1;ACCEPTED;2015-07-09T06:09:31;Java talking;Streams and lambdas;3;1
+8;1;ACCEPTED;2016-08-09T06:09:31;C++;C++ in production;3;1
+9;1;ACCEPTED;2016-09-09T06:09:31;Java;Collections;3;1
+10;1;NEW;2018-10-09T06:09:31;1C;Convertation for trade configuration;3;1
+11;1;ACCEPTED;2019-11-09T06:09:31;Football;about football;3;1
+12;-1;NEW;2019-12-09T06:09:31;Football;about football;3;1
 13;1;NEW;2020-01-09T06:09:31;Football;about football;3;1
-14;-1;ACCEPTED;2019-02-09T06:09:31;Football;about football;3;1
-15;1;NEW;2017-03-09T06:09:31;Football;about football;3;1
-16;1;ACCEPTED;2013-04-09T06:09:31;Football;about football;3;1
+14;-1;ACCEPTED;2019-02-09T06:09:31;Basketball;about basketboll;3;1
+15;1;NEW;2017-03-09T06:09:31;Basketball;about basketboll;3;1
+16;1;ACCEPTED;2013-04-09T06:09:31;Football;about basketboll;3;1
