@@ -1,11 +1,7 @@
 package com.skillbox.blogapp.model.entity;
 
-import com.github.cage.Cage;
-import com.github.cage.YCage;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,9 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * A CaptchaCode.
- */
 @Entity
 @Table(name = "captcha_code")
 @Getter
@@ -44,15 +37,10 @@ public class CaptchaCode implements Serializable {
     private String secretCode;
     private transient String imageInBase64;
 
-    public CaptchaCode(String secretCode) {
-
-        Cage cage = new YCage();
-        this.time = Instant.now();
-        this.code = cage.getTokenGenerator().next();
-        this.secretCode = UUID.randomUUID().toString();
-        this.imageInBase64 = String.format("data:image/png;base64, %s",
-            Base64.getEncoder().encodeToString(cage.draw(secretCode)));
-
+    public CaptchaCode(Instant time, String code, String secretCode, String imageInBase64) {
+        this.time = time;
+        this.code = code;
+        this.secretCode = secretCode;
+        this.imageInBase64 = imageInBase64;
     }
-
 }

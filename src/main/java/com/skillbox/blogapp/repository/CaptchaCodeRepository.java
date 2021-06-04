@@ -19,6 +19,7 @@ public interface CaptchaCodeRepository extends JpaRepository<CaptchaCode, Intege
     @Query("from CaptchaCode where time <= :time")
     List<CaptchaCode> findCaptchaCodeByLessThenTime(@Param("time") Instant time);
 
-    Optional<CaptchaCode> findOneBySecretCode(@Param("code") String code);
+    @Query("from CaptchaCode where time >= :time and code = :code")
+    Optional<CaptchaCode> findOneByCodeMoreThenTime(@Param("code") String code, @Param("time") Instant time);
 
 }

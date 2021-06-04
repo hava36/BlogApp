@@ -35,8 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PostServiceImpl implements PostService {
 
+    public static final Map<String, Sort> MODE_SORTING_SETTINGS = Map.of("best", Sort.by(Direction.DESC, "likeCount"),
+        "popular", Sort.by(Direction.DESC, "commentCount"),
+        "recent", Sort.by(Direction.DESC, "time"),
+        "early", Sort.by(Direction.ASC, "time"));
     private final Logger log = LoggerFactory.getLogger(PostServiceImpl.class);
-
     private final PostRepository postRepository;
 
     private final PostDetailedMapper postDetailedMapper;
@@ -45,8 +48,6 @@ public class PostServiceImpl implements PostService {
 
     private final PostViewBriefMapper postViewBriefMapper;
 
-    private final Map<String, Sort> modeSortingSettings;
-
     public PostServiceImpl(PostRepository postRepository, PostDetailedMapper postDetailedMapper,
         PostViewRepositoryReadOnly postViewRepository,
         PostViewBriefMapper postViewBriefMapper) {
@@ -54,10 +55,6 @@ public class PostServiceImpl implements PostService {
         this.postDetailedMapper = postDetailedMapper;
         this.postViewRepository = postViewRepository;
         this.postViewBriefMapper = postViewBriefMapper;
-        this.modeSortingSettings = Map.of("best", Sort.by(Direction.DESC, "likeCount"),
-            "popular", Sort.by(Direction.DESC, "commentCount"),
-            "recent", Sort.by(Direction.DESC, "time"),
-            "early", Sort.by(Direction.ASC, "time"));
     }
 
     @Override
@@ -87,11 +84,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseList findEnabledByMode(String mode, Long offset, Integer limit) {
 
-        if (!modeSortingSettings.containsKey(mode)) {
+        if (!MODE_SORTING_SETTINGS.containsKey(mode)) {
             throw new IllegalArgumentException(String.format("undefined mode parameter %s", mode));
         }
 
-        Pageable pageRequest = new OffsetBasedPageRequest(offset.shortValue(), limit, modeSortingSettings.get(mode));
+        Pageable pageRequest = new OffsetBasedPageRequest(offset.shortValue(), limit, MODE_SORTING_SETTINGS.get(mode));
 
         List<PostBriefDto> posts = postViewRepository
             .findByIsActiveAndStatusLessThenInstant(pageRequest, 1, ModerationStatus.ACCEPTED, Instant.now())
