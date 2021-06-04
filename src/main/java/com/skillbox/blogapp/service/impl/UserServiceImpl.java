@@ -1,12 +1,12 @@
 package com.skillbox.blogapp.service.impl;
 
 import com.skillbox.blogapp.config.Constants;
+import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
 import com.skillbox.blogapp.model.dto.UserDto;
-import com.skillbox.blogapp.model.entity.CaptchaCode;
 import com.skillbox.blogapp.model.entity.User;
 import com.skillbox.blogapp.model.response.RegistrationResponse;
-import com.skillbox.blogapp.repository.CaptchaCodeRepository;
 import com.skillbox.blogapp.repository.UserRepository;
+import com.skillbox.blogapp.service.CaptchaCodeService;
 import com.skillbox.blogapp.service.UserService;
 import com.skillbox.blogapp.service.mapper.UserMapper;
 import java.util.HashMap;
@@ -17,12 +17,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service Implementation for managing {@link User}.
- */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -31,21 +29,26 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository usersRepository;
 
-    private final CaptchaCodeRepository captchaRepository;
+    private final CaptchaCodeService captchaCodeService;
 
     private final UserMapper usersMapper;
 
-    public UserServiceImpl(UserRepository usersRepository, CaptchaCodeRepository captchaRepository, UserMapper usersMapper) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository usersRepository, CaptchaCodeService captchaCodeService, UserMapper usersMapper,
+        PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
-        this.captchaRepository = captchaRepository;
+        this.captchaCodeService = captchaCodeService;
         this.usersMapper = usersMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public RegistrationResponse register(UserDto userDto) {
         Map<String, String> errors = checkRegistration(userDto);
         if (errors.isEmpty()) {
-            usersRepository.save(usersMapper.toEntity(userDto));
+            User user = usersMapper.toEntity(userDto, passwordEncoder.encode(userDto.getPassword()));
+            usersRepository.save(user);
         }
         return new RegistrationResponse(errors.isEmpty(), errors);
     }
@@ -99,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
         Map<String, String> errors = new HashMap<>();
 
-        Optional<CaptchaCode> captchaCode = captchaRepository.findOneBySecretCode(userDto.getCaptchaSecretCode());
+        Optional<CaptchaCodeDto> optionalCaptcha = captchaCodeService.findValidOneBySecretCode(userDto.getCaptchaCode());
 
         Optional<User> user = usersRepository.findOneByEmail(userDto.getEmail());
 
@@ -111,9 +114,10 @@ public class UserServiceImpl implements UserService {
             errors.put("password", "password doesn't match the requirements");
         }
 
-        if (captchaCode.isPresent()) {
-            if (!captchaCode.get().getCode().equals(userDto.getCaptchaCode())) {
-                errors.put("captcha", "captcha code hasn't matched");
+        if (optionalCaptcha.isPresent()) {
+            CaptchaCodeDto captchaCodeDto = optionalCaptcha.get();
+            if (!captchaCodeDto.getSecretCode().equals(userDto.getCaptchaSecretCode())) {
+                errors.put("captcha", "captcha code hasn't matched or expired");
             }
         } else {
             errors.put("captcha", "secret code hasn't found");

@@ -15,6 +15,11 @@ public interface UserMapper extends EntityMapper<UserDto, User> {
 
     User toEntity(UserDto dto);
 
+    default User toEntity(UserDto dto, String encodingPassword) {
+        dto.setPassword(encodingPassword);
+        return toEntity(dto);
+    }
+
     UserDto toDto(User entity);
 
     @Named("idName")

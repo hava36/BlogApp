@@ -33,7 +33,8 @@ public class AuthController {
 
     @GetMapping("/captcha")
     public ResponseEntity<CaptchaCodeDto> captcha() {
-        return new ResponseEntity<>(captchaCodeService.generate(), HttpStatus.OK);
+        var optionalCaptcha = captchaCodeService.generate();
+        return new ResponseEntity<>(optionalCaptcha.orElseThrow(), HttpStatus.OK);
     }
 
     @PostMapping("/register")
