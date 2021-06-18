@@ -1,7 +1,7 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
-import com.skillbox.blogapp.model.dto.post.PostBriefDto;
 import com.skillbox.blogapp.model.entity.PostVote;
+import com.skillbox.blogapp.service.dto.post.PostBriefDto;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.validation.constraints.NotNull;

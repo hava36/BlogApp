@@ -1,10 +1,10 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.TagDto;
 import com.skillbox.blogapp.model.entity.Tag;
 import com.skillbox.blogapp.repository.TagRepository;
 import com.skillbox.blogapp.repository.TagViewReadOnlyRepository;
 import com.skillbox.blogapp.service.TagService;
+import com.skillbox.blogapp.service.dto.TagDto;
 import com.skillbox.blogapp.service.mapper.TagMapper;
 import com.skillbox.blogapp.service.mapper.TagViewMapper;
 import java.util.LinkedList;

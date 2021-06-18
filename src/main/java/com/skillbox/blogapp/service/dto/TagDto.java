@@ -1,4 +1,4 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
 import com.skillbox.blogapp.model.entity.Tag;
 import java.io.Serializable;

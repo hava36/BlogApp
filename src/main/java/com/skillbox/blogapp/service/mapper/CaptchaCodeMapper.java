@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
 import com.skillbox.blogapp.model.entity.CaptchaCode;
+import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
 import org.mapstruct.Mapper;
 
 /**

@@ -1,13 +1,13 @@
 package com.skillbox.blogapp.service.impl;
 
 import com.skillbox.blogapp.config.Constants;
-import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
-import com.skillbox.blogapp.model.dto.UserDto;
 import com.skillbox.blogapp.model.entity.User;
 import com.skillbox.blogapp.model.response.RegistrationResponse;
 import com.skillbox.blogapp.repository.UserRepository;
 import com.skillbox.blogapp.service.CaptchaCodeService;
 import com.skillbox.blogapp.service.UserService;
+import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
+import com.skillbox.blogapp.service.dto.UserDto;
 import com.skillbox.blogapp.service.mapper.UserMapper;
 import java.util.HashMap;
 import java.util.LinkedList;

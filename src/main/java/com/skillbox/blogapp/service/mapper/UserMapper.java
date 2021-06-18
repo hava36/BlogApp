@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.UserDto;
 import com.skillbox.blogapp.model.entity.User;
+import com.skillbox.blogapp.service.dto.UserDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

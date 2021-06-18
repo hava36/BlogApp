@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.post.PostBriefDto;
 import com.skillbox.blogapp.model.entity.PostView;
+import com.skillbox.blogapp.service.dto.post.PostBriefDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

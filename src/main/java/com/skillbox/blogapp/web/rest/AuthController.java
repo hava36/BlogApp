@@ -1,11 +1,11 @@
 package com.skillbox.blogapp.web.rest;
 
-import com.skillbox.blogapp.model.dto.AuthResponseDto;
-import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
-import com.skillbox.blogapp.model.dto.UserDto;
 import com.skillbox.blogapp.model.response.RegistrationResponse;
 import com.skillbox.blogapp.service.CaptchaCodeService;
 import com.skillbox.blogapp.service.UserService;
+import com.skillbox.blogapp.service.dto.AuthResponseDto;
+import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
+import com.skillbox.blogapp.service.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

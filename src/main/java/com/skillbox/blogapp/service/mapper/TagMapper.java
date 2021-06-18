@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.TagDto;
 import com.skillbox.blogapp.model.entity.Tag;
+import com.skillbox.blogapp.service.dto.TagDto;
 import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.skillbox.blogapp.model.dto.post.PostBriefDto;
+import com.skillbox.blogapp.service.dto.post.PostBriefDto;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Getter;

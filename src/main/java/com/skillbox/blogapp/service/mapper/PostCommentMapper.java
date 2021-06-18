@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.PostCommentDto;
 import com.skillbox.blogapp.model.entity.PostComment;
+import com.skillbox.blogapp.service.dto.PostCommentDto;
 import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

@@ -1,6 +1,6 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
+import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
 import java.util.Optional;
 
 public interface CaptchaCodeService {

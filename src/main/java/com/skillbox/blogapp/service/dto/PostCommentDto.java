@@ -1,8 +1,8 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.skillbox.blogapp.model.dto.post.PostBriefDto;
 import com.skillbox.blogapp.model.entity.PostComment;
+import com.skillbox.blogapp.service.dto.post.PostBriefDto;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.validation.constraints.NotNull;

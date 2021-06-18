@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.TagDto;
 import com.skillbox.blogapp.model.entity.Tag;
+import com.skillbox.blogapp.service.dto.TagDto;
 import java.util.List;
 import java.util.Optional;
 

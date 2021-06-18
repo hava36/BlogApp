@@ -1,4 +1,4 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
 /**
  * A DTO representing a password change required data - current and new password.

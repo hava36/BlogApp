@@ -1,4 +1,4 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;

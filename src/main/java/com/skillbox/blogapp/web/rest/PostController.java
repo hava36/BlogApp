@@ -1,8 +1,8 @@
 package com.skillbox.blogapp.web.rest;
 
-import com.skillbox.blogapp.model.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.model.response.PostResponseList;
 import com.skillbox.blogapp.service.PostService;
+import com.skillbox.blogapp.service.dto.post.PostDetailedDto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;

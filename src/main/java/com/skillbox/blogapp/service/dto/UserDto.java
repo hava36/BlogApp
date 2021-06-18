@@ -1,4 +1,4 @@
-package com.skillbox.blogapp.model.dto;
+package com.skillbox.blogapp.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.skillbox.blogapp.model.entity.User;

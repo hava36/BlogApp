@@ -1,9 +1,9 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.model.response.CalendarResponseList;
 import com.skillbox.blogapp.model.response.PostResponseList;
+import com.skillbox.blogapp.service.dto.post.PostDetailedDto;
 import java.time.LocalDate;
 import java.util.Optional;
 
