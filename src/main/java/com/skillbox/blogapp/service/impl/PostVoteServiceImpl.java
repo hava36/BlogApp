@@ -1,9 +1,9 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.PostVoteDto;
 import com.skillbox.blogapp.model.entity.PostVote;
 import com.skillbox.blogapp.repository.PostVoteRepository;
 import com.skillbox.blogapp.service.PostVoteService;
+import com.skillbox.blogapp.service.dto.PostVoteDto;
 import com.skillbox.blogapp.service.mapper.PostVoteMapper;
 import java.util.LinkedList;
 import java.util.List;

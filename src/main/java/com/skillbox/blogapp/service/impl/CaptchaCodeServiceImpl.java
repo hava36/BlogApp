@@ -2,10 +2,10 @@ package com.skillbox.blogapp.service.impl;
 
 import com.github.cage.Cage;
 import com.github.cage.YCage;
-import com.skillbox.blogapp.model.dto.CaptchaCodeDto;
 import com.skillbox.blogapp.model.entity.CaptchaCode;
 import com.skillbox.blogapp.repository.CaptchaCodeRepository;
 import com.skillbox.blogapp.service.CaptchaCodeService;
+import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
 import com.skillbox.blogapp.service.mapper.CaptchaCodeMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

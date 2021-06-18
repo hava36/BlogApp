@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.PostVoteDto;
 import com.skillbox.blogapp.model.entity.PostVote;
+import com.skillbox.blogapp.service.dto.PostVoteDto;
 import java.util.List;
 import java.util.Optional;
 

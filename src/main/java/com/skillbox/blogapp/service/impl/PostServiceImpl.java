@@ -1,7 +1,5 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.post.PostBriefDto;
-import com.skillbox.blogapp.model.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
 import com.skillbox.blogapp.model.response.CalendarResponseList;
 import com.skillbox.blogapp.model.response.PostResponseList;
@@ -9,6 +7,8 @@ import com.skillbox.blogapp.repository.PostRepository;
 import com.skillbox.blogapp.repository.PostViewRepositoryReadOnly;
 import com.skillbox.blogapp.repository.domain.OffsetBasedPageRequest;
 import com.skillbox.blogapp.service.PostService;
+import com.skillbox.blogapp.service.dto.post.PostBriefDto;
+import com.skillbox.blogapp.service.dto.post.PostDetailedDto;
 import com.skillbox.blogapp.service.mapper.PostDetailedMapper;
 import com.skillbox.blogapp.service.mapper.PostViewBriefMapper;
 import java.math.BigInteger;

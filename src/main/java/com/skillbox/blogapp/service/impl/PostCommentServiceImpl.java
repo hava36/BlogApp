@@ -1,9 +1,9 @@
 package com.skillbox.blogapp.service.impl;
 
-import com.skillbox.blogapp.model.dto.PostCommentDto;
 import com.skillbox.blogapp.model.entity.PostComment;
 import com.skillbox.blogapp.repository.PostCommentRepository;
 import com.skillbox.blogapp.service.PostCommentService;
+import com.skillbox.blogapp.service.dto.PostCommentDto;
 import com.skillbox.blogapp.service.mapper.PostCommentMapper;
 import java.util.LinkedList;
 import java.util.List;

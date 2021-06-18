@@ -1,8 +1,8 @@
 package com.skillbox.blogapp.service.mapper;
 
-import com.skillbox.blogapp.model.dto.TagDto;
 import com.skillbox.blogapp.model.entity.Tag;
 import com.skillbox.blogapp.model.entity.TagView;
+import com.skillbox.blogapp.service.dto.TagDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

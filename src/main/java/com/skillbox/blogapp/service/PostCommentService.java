@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service;
 
-import com.skillbox.blogapp.model.dto.PostCommentDto;
 import com.skillbox.blogapp.model.entity.PostComment;
+import com.skillbox.blogapp.service.dto.PostCommentDto;
 import java.util.List;
 import java.util.Optional;
 
