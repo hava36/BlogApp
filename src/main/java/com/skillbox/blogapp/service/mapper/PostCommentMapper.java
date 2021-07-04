@@ -2,6 +2,7 @@ package com.skillbox.blogapp.service.mapper;
 
 import com.skillbox.blogapp.model.entity.PostComment;
 import com.skillbox.blogapp.service.dto.PostCommentDto;
+import com.skillbox.blogapp.service.mapper.user.DefaultUserMapper;
 import java.util.Set;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -11,7 +12,7 @@ import org.mapstruct.Named;
 /**
  * Mapper for the entity {@link PostComment} and its DTO {@link PostCommentDto}.
  */
-@Mapper(componentModel = "spring", uses = {UserMapper.class, PostDetailedMapper.class})
+@Mapper(componentModel = "spring", uses = {DefaultUserMapper.class, PostDetailedMapper.class})
 public interface PostCommentMapper extends EntityMapper<PostCommentDto, PostComment> {
 
     @Mapping(target = "parent", source = "parent")

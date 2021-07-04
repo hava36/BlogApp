@@ -2,7 +2,7 @@ package com.skillbox.blogapp.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.skillbox.blogapp.model.entity.PostComment;
-import com.skillbox.blogapp.service.dto.post.PostBriefDto;
+import com.skillbox.blogapp.service.dto.post.PostResponseListItem;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.validation.constraints.NotNull;
@@ -29,6 +29,6 @@ public class PostCommentDto implements Serializable {
     @JsonIgnoreProperties(value = {"password", "isModerator", "regTime", "email", "code", "posts"})
     private UserDto user;
 
-    private PostBriefDto post;
+    private PostResponseListItem post;
 
 }

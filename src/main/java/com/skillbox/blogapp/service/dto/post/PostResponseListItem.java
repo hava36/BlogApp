@@ -2,10 +2,10 @@ package com.skillbox.blogapp.service.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.skillbox.blogapp.model.entity.Post;
+import com.skillbox.blogapp.model.entity.PostComment;
+import com.skillbox.blogapp.model.entity.PostVote;
 import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
-import com.skillbox.blogapp.service.dto.PostCommentDto;
-import com.skillbox.blogapp.service.dto.PostVoteDto;
 import com.skillbox.blogapp.service.dto.TagDto;
 import com.skillbox.blogapp.service.dto.UserDto;
 import java.io.Serializable;
@@ -16,16 +16,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 
+/**
+ * A DTO for the {@link Post} entity.
+ */
 @Getter
 @Setter
-public class PostDetailedDto implements Serializable {
+public class PostResponseListItem implements Serializable {
 
     private static final int MAX_COUNT_OF_ANNOUNCE = 150;
 
     private Integer id;
 
     @NotNull
-    @JsonProperty("active")
     private Integer isActive;
 
     @NotNull
@@ -45,7 +47,6 @@ public class PostDetailedDto implements Serializable {
     private String text;
 
     @NotNull
-    @JsonIgnore
     private String announce;
 
     @NotNull
@@ -66,18 +67,18 @@ public class PostDetailedDto implements Serializable {
     private UserDto moderator;
 
     @NotNull
-    @JsonIgnoreProperties(value = {"isModerator", "regTime", "email", "password", "code", "photo",
-        "posts"})
+    @JsonIgnoreProperties(value = {"isModerator", "regTime", "e_mail", "password", "code", "photo",
+        "posts", "captcha", "captcha_secret"})
     private UserDto user;
 
     @JsonIgnoreProperties(value = {"id", "weight"})
     private Set<TagDto> tags;
 
     @JsonIgnoreProperties(value = {"parent", "post"})
-    private Set<PostCommentDto> comments;
+    private Set<PostComment> comments;
 
     @JsonIgnore
-    private Set<PostVoteDto> votes;
+    private Set<PostVote> votes;
 
     public void setAnnounce(String text) {
         String textWithoutTags = Jsoup.parse(text).text();

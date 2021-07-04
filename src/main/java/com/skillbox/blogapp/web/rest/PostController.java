@@ -2,7 +2,7 @@ package com.skillbox.blogapp.web.rest;
 
 import com.skillbox.blogapp.model.response.PostResponseList;
 import com.skillbox.blogapp.service.PostService;
-import com.skillbox.blogapp.service.dto.post.PostDetailedDto;
+import com.skillbox.blogapp.service.dto.post.PostDetailedItem;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +36,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailedDto> findPostById(@PathVariable("id") Integer id) {
-        Optional<PostDetailedDto> optionalPostDto = postService.findOne(id);
+    public ResponseEntity<PostDetailedItem> findPostById(@PathVariable("id") Integer id) {
+        Optional<PostDetailedItem> optionalPostDto = postService.findOne(id);
         return optionalPostDto.map(postDetailedDto -> new ResponseEntity<>(postDetailedDto, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -75,5 +76,13 @@ public class PostController {
 
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<PostResponseList> findMyPosts(
+        @RequestHeader(name = "sessionId") String sessionId,
+        @RequestParam(required = false, defaultValue = "0") Long offset,
+        @RequestParam(required = false, defaultValue = "10") Integer limit,
+        @RequestParam(required = false, defaultValue = "published") String status) {
+        return ResponseEntity.ok(postService.findUserPostsByStatus(sessionId, status, offset, limit));
+    }
 
 }

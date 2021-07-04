@@ -28,9 +28,9 @@
         relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210509131125_added_entity_GlobalSetting.xml"
         relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20210509131120_added_entity_constraints_Post.xml"
-        relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210509131121_added_entity_constraints_PostVote.xml"
+        relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210509131120_added_entity_constraints_Post.xml"
         relativeToChangelogFile="false"/>
     <include
         file="config/liquibase/changelog/20210509131122_added_entity_constraints_PostComment.xml"

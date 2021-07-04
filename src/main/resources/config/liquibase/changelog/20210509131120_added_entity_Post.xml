@@ -4,9 +4,23 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <!--
-        Added the entity Post.
-    -->
+
+    <changeSet author="jhipster" id="20210509131120-1-relations">
+
+        <createTable tableName="tag2post">
+            <column name="id" type="integer">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="tag_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
     <changeSet author="jhipster" id="20210509131120-1">
         <createTable tableName="post">
             <column autoIncrement="true" name="id" type="integer">
@@ -39,24 +53,6 @@
 
         </createTable>
         <dropDefaultValue columnDataType="${datetimeType}" columnName="time" tableName="post"/>
-    </changeSet>
-
-    <changeSet author="jhipster" id="20210509131120-1-relations">
-
-        <addPrimaryKey columnNames="id" tableName="tag2post"/>
-
-        <createTable tableName="tag2post">
-            <column name="id" type="integer">
-                <constraints nullable="false"/>
-            </column>
-            <column name="tag_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
-            <column name="post_id" type="integer">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
