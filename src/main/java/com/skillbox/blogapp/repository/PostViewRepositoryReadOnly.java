@@ -3,6 +3,7 @@ package com.skillbox.blogapp.repository;
 import com.skillbox.blogapp.model.entity.PostView;
 import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,4 +70,20 @@ public interface PostViewRepositoryReadOnly extends ReadOnlyRepository<PostView,
         @Param("status") ModerationStatus status,
         @Param("time") Instant instant,
         @Param("tag") String tag);
+
+
+    @Query(value = "select * from post_View p where p.is_active = :is_active and p.moderation_status in :statuses "
+        + "and p.moderator_id = :user_id", nativeQuery = true)
+    List<PostView> findIsActiveAndByStatusesAndByUserId(Pageable pageable,
+        @Param("is_active") Integer isActive,
+        @Param("statuses") Collection<String> statuses,
+        @Param("user_id") Integer userId);
+
+    @Query(value = "select count(*) from post_View p where p.is_active = :is_active and p.moderation_status in :statuses "
+        + "and p.moderator_id = :user_id", nativeQuery = true)
+    Long countIsActiveAndStatusLessThenInstantAndByUserId(
+        @Param("is_active") Integer isActive,
+        @Param("statuses") Collection<String> statuses,
+        @Param("user_id") Integer userId);
+
 }

@@ -32,4 +32,5 @@
             referencedColumnNames="id"
             referencedTableName="tag"/>
     </changeSet>
+
 </databaseChangeLog>

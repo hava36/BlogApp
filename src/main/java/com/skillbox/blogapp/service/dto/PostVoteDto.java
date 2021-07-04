@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.service.dto;
 
 import com.skillbox.blogapp.model.entity.PostVote;
-import com.skillbox.blogapp.service.dto.post.PostBriefDto;
+import com.skillbox.blogapp.service.dto.post.PostResponseListItem;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.validation.constraints.NotNull;
@@ -27,6 +27,6 @@ public class PostVoteDto implements Serializable {
     private UserDto user;
 
     @NotNull
-    private PostBriefDto post;
+    private PostResponseListItem post;
 
 }

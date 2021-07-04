@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +62,7 @@ public class CaptchaCodeServiceImpl implements CaptchaCodeService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 3600000)
+    //@Scheduled(fixedDelay = 3600000)
     public void removeExpiredCaptcha() {
         log.debug("============>>>>>>>> removeExpiredCaptcha() is working");
         captchaCodeRepository.deleteAll(captchaCodeRepository.findCaptchaCodeByLessThenTime(Instant.now().minus(expiredTimeInSeconds, ChronoUnit.SECONDS)));
