@@ -3,7 +3,7 @@ package com.skillbox.blogapp.service.impl;
 import static com.skillbox.blogapp.config.Constants.MODE_SORTING_SETTINGS;
 import static com.skillbox.blogapp.config.Constants.MY_POSTS_STATUS_PARAMETERS;
 
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
 import com.skillbox.blogapp.model.response.CalendarResponseList;
 import com.skillbox.blogapp.model.response.PostResponseList;
 import com.skillbox.blogapp.repository.PostRepository;
@@ -150,9 +150,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseList findUserPostsByStatus(String sessionId, String status, Long offset, Integer limit) {
+    public PostResponseList findUserPostsByStatus(String status, Long offset, Integer limit) {
 
-        Optional<UserDto> optionalUserDto = userService.findOneBySessionId(sessionId);
+        Optional<UserDto> optionalUserDto = userService.findAuthenticatedUser();
 
         if (optionalUserDto.isEmpty()) {
             return new PostResponseList(new ArrayList<>(), 0L);

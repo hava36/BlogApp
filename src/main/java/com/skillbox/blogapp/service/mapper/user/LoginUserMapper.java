@@ -1,24 +1,24 @@
 package com.skillbox.blogapp.service.mapper.user;
 
 import com.skillbox.blogapp.model.entity.User;
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
-import com.skillbox.blogapp.service.dto.auth.login.response.LoginResponseSuccessUser;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
+import com.skillbox.blogapp.service.dto.auth.login.response.LoginResponseUser;
 import com.skillbox.blogapp.service.mapper.EntityMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
-public interface LoginUserMapper extends EntityMapper<LoginResponseSuccessUser, User> {
+public interface LoginUserMapper extends EntityMapper<LoginResponseUser, User> {
 
     @Override
-    User toEntity(LoginResponseSuccessUser dto);
+    User toEntity(LoginResponseUser dto);
 
     @Override
-    LoginResponseSuccessUser toDto(User entity);
+    LoginResponseUser toDto(User entity);
 
     @AfterMapping
-    default void toDto(User user, @MappingTarget LoginResponseSuccessUser userDto) {
+    default void toDto(User user, @MappingTarget LoginResponseUser userDto) {
 
         userDto.setModerationCount(
             user.getPosts().stream().filter(post -> post.getModerationStatus().equals(ModerationStatus.NEW)).count());

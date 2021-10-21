@@ -1,13 +1,10 @@
 package com.skillbox.blogapp.security;
 
 import com.skillbox.blogapp.model.entity.User;
+import com.skillbox.blogapp.model.entity.enums.Role;
 import com.skillbox.blogapp.repository.UserRepository;
-import java.util.Collections;
-import java.util.Locale;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,28 +27,19 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(final String login) {
-        log.debug("Authenticating {}", login);
+    public UserDetails loadUserByUsername(final String email) {
+        log.debug("Authenticating {}", email);
 
-        if (new EmailValidator().isValid(login, null)) {
-            return userRepository
-                .findOneByEmailIgnoreCase(login)
-                .map(this::createSpringSecurityUser)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                    "User with email " + login + " was not found in the database"));
-        }
-
-        String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
         return userRepository
-            .findOneByName(lowercaseLogin)
+            .findByEmail(email)
             .map(this::createSpringSecurityUser)
             .orElseThrow(() -> new UsernameNotFoundException(
-                "User " + lowercaseLogin + " was not found in the database"));
+                "User " + email + " was not found in the database"));
     }
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(User user) {
+        Role role = user.getIsModerator() == 1 ? Role.MODERATOR : Role.USER;
         return new org.springframework.security.core.userdetails.User(user.getName(),
-            user.getPassword(),
-            Collections.singleton(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)));
+            user.getPassword(), role.getAuthorities());
     }
 }

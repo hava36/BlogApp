@@ -13,6 +13,8 @@ public interface GlobalSettingService {
      *
      * @return the list of entities.
      */
-    Map<String, Object> findAll();
+    Map<String, Boolean> findAll();
+
+    Map<String, Boolean> updateSettings(Map<String, Boolean> settings);
 
 }

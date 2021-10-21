@@ -1,6 +1,6 @@
 package com.skillbox.blogapp.model.entity;
 
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;

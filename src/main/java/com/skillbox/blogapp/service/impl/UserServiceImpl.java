@@ -9,8 +9,7 @@ import com.skillbox.blogapp.service.UserService;
 import com.skillbox.blogapp.service.dto.CaptchaCodeDto;
 import com.skillbox.blogapp.service.dto.UserDto;
 import com.skillbox.blogapp.service.dto.auth.login.request.LoginRequest;
-import com.skillbox.blogapp.service.dto.auth.login.response.LoginResponseSuccess;
-import com.skillbox.blogapp.service.exception.ErrorCredentialsException;
+import com.skillbox.blogapp.service.dto.auth.login.response.LoginResponse;
 import com.skillbox.blogapp.service.mapper.user.DefaultUserMapper;
 import com.skillbox.blogapp.service.mapper.user.LoginUserMapper;
 import java.util.HashMap;
@@ -18,12 +17,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +40,8 @@ public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private final AuthenticationManager authenticationManager;
+
     private final UserRepository usersRepository;
 
     private final CaptchaCodeService captchaCodeService;
@@ -43,8 +51,6 @@ public class UserServiceImpl implements UserService {
     private final LoginUserMapper loginUserMapper;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final Map<String, Integer> sessionIds;
 
     @Override
     public RegistrationResponse register(UserDto userDto) {
@@ -96,11 +102,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> findOneBySessionId(String sessionId) {
-        if (sessionIds.containsKey(sessionId)) {
-            return findOne(sessionIds.get(sessionId));
+    public Optional<UserDto> findAuthenticatedUser() {
+
+        if (!principalIsValid()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        org.springframework.security.core.userdetails.User principal =
+            (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        return usersRepository.findByName(principal.getUsername()).map(defaultUserMapper::toDto);
+
     }
 
     @Override
@@ -111,24 +124,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<LoginResponseSuccess> login(LoginRequest loginRequest) {
-        Optional<User> optionalUser = usersRepository.findOneByEmailIgnoreCase(loginRequest.getEmail());
-        optionalUser.orElseThrow(() -> new ErrorCredentialsException("There is no user with current e-mail or password"));
-        String sessionId = UUID.randomUUID().toString();
-        optionalUser.ifPresent(user -> {
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                sessionIds.put(sessionId, user.getId());
-            } else {
-                throw new ErrorCredentialsException("There is no user with current e-mail or password");
-            }
-        });
-        return Optional.of(
-            new LoginResponseSuccess(sessionId, optionalUser.map(loginUserMapper::toDto).get()));
+    public Optional<LoginResponse> login(LoginRequest loginRequest) {
+
+        Authentication auth =
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) auth.getPrincipal();
+
+        User currentUser = usersRepository.findByName(user.getUsername()).orElseThrow(() -> new UsernameNotFoundException(user.getUsername()));
+
+        return Optional.of(new LoginResponse(loginUserMapper.toDto(currentUser), true));
+
     }
 
     @Override
-    public void logout(String sessionId) {
-        sessionIds.remove(sessionId);
+    public Optional<LoginResponse> check() {
+
+        if (!principalIsValid()) {
+            return Optional.empty();
+        }
+
+        org.springframework.security.core.userdetails.User principal =
+            (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return usersRepository.findByName(principal.getUsername())
+            .map(loginUserMapper::toDto)
+            .map(user -> new LoginResponse(user, true));
+
+    }
+
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+
     }
 
     private Map<String, String> checkRegistration(UserDto userDto) {
@@ -137,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<CaptchaCodeDto> optionalCaptcha = captchaCodeService.findValidOneBySecretCode(userDto.getCaptchaCode());
 
-        Optional<User> user = usersRepository.findOneByEmailIgnoreCase(userDto.getEmail());
+        Optional<User> user = usersRepository.findByEmail(userDto.getEmail());
 
         if (user.isPresent()) {
             errors.put("e_mail", "the current email already exists");
@@ -159,5 +190,11 @@ public class UserServiceImpl implements UserService {
         return errors;
 
     }
+
+    private boolean principalIsValid() {
+        return (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+            instanceof org.springframework.security.core.userdetails.User);
+    }
+
 
 }

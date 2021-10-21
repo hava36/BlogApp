@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponseSuccessUser {
+public class LoginResponseUser {
 
     private Integer id;
     private String name;
