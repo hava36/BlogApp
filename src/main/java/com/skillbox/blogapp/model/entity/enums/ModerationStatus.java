@@ -1,4 +1,4 @@
-package com.skillbox.blogapp.model.entity.enumeration;
+package com.skillbox.blogapp.model.entity.enums;
 
 /**
  * The ModerationStatus enumeration.

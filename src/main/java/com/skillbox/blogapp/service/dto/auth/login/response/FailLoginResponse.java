@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponseFail {
+public class FailLoginResponse {
 
     private Boolean result = false;
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.skillbox.blogapp.model.entity.Post;
 import com.skillbox.blogapp.model.entity.PostComment;
 import com.skillbox.blogapp.model.entity.PostVote;
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
 import com.skillbox.blogapp.service.dto.TagDto;
 import com.skillbox.blogapp.service.dto.UserDto;
 import java.io.Serializable;

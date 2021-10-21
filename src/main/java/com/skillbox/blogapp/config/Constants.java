@@ -1,8 +1,8 @@
 package com.skillbox.blogapp.config;
 
-import static com.skillbox.blogapp.model.entity.enumeration.ModerationStatus.ACCEPTED;
-import static com.skillbox.blogapp.model.entity.enumeration.ModerationStatus.DECLINED;
-import static com.skillbox.blogapp.model.entity.enumeration.ModerationStatus.NEW;
+import static com.skillbox.blogapp.model.entity.enums.ModerationStatus.ACCEPTED;
+import static com.skillbox.blogapp.model.entity.enums.ModerationStatus.DECLINED;
+import static com.skillbox.blogapp.model.entity.enums.ModerationStatus.NEW;
 
 import java.util.List;
 import java.util.Map;
@@ -22,10 +22,6 @@ public final class Constants {
 
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "ru";
-
-    public static final boolean MULTIUSER_MODE = false;
-    public static final boolean POST_PREMODERATION = true;
-    public static final boolean STATISTICS_IS_PUBLIC = true;
 
     public static final String IS_ACTIVE_FIELD_NAME = "isActive";
     public static final String STATUSES_FIELD_NAME = "statuses";

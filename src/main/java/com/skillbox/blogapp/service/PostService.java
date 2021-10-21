@@ -24,7 +24,7 @@ public interface PostService {
 
     PostResponseList findEnabledByTag(String tag, Long offset, Integer limit);
 
-    PostResponseList findUserPostsByStatus(String sessionId, String status, Long offset, Integer limit);
+    PostResponseList findUserPostsByStatus(String status, Long offset, Integer limit);
 
     CalendarResponseList findEnabledWithinYear(Integer year);
 

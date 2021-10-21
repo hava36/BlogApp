@@ -3,7 +3,7 @@ package com.skillbox.blogapp.service.dto.post;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
 import com.skillbox.blogapp.service.dto.PostCommentDto;
 import com.skillbox.blogapp.service.dto.PostVoteDto;
 import com.skillbox.blogapp.service.dto.TagDto;

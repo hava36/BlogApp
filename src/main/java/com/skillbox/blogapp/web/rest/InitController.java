@@ -1,12 +1,11 @@
 package com.skillbox.blogapp.web.rest;
 
 import com.skillbox.blogapp.model.response.CalendarResponseList;
-import com.skillbox.blogapp.service.GlobalSettingService;
 import com.skillbox.blogapp.service.PostService;
 import com.skillbox.blogapp.service.dto.InitDto;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,27 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class InitController {
 
-    private final GlobalSettingService globalSettingService;
     private final PostService postService;
     private final InitDto initDto;
-
-    public InitController(
-        GlobalSettingService globalSettingService, PostService postService, InitDto initDto) {
-        this.globalSettingService = globalSettingService;
-        this.postService = postService;
-        this.initDto = initDto;
-    }
 
     @GetMapping("/init")
     public ResponseEntity<InitDto> init() {
         return new ResponseEntity<>(initDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/settings")
-    public ResponseEntity<Map<String, Object>> settings() {
-        return new ResponseEntity<>(globalSettingService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/calendar")

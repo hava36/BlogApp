@@ -1,7 +1,7 @@
 package com.skillbox.blogapp.repository;
 
 import com.skillbox.blogapp.model.entity.PostView;
-import com.skillbox.blogapp.model.entity.enumeration.ModerationStatus;
+import com.skillbox.blogapp.model.entity.enums.ModerationStatus;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
